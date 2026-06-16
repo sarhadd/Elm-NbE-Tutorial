@@ -1,0 +1,2 @@
+-- Implementation of Natrual integers.
+-- Following: https://github.com/dwayne/elm-natural
