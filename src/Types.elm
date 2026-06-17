@@ -1,23 +1,62 @@
 -- Value, Neutral, Normal types.
-module Types exposing (...)
+module Types exposing (..)
 
 import Natural exposing (Natural)
+
+
+-- ── Shared primitives ─────────────────────────────────────────────────────
+
+
+type alias Name =
+    String
+
+
+type alias Env a =
+    List ( Name, a )
+
+
+-- ── Type language (§4) ────────────────────────────────────────────────────
+
 
 type Ty
     = TNat        -- natural type
     | TArr Ty Ty  -- function type (t₁ → t₂)
 
+
+-- ── Expression syntax ─────────────────────────────────────────────────────
+-- Defined here to avoid a circular import: Value references Expr (closures),
+-- and Expr references Ty. Move to Expr.elm once boundaries stabilise.
+
+
+type Expr
+    = EVar Name
+    | ELambda Name Expr
+    | EApp Expr Expr
+    | EPlus Expr Expr   -- addition on Nat
+    | ELit Natural      -- natural number literal
+    | EAnn Expr Ty
+
+
+-- ── Semantic domain: Values, Neutrals, Normals (§5) ───────────────────────
+
+
 type Value
-    = VNat Natural   -- Replaces VZero and VAdd1 Value
-    | VClousre (Env Value) Name Expr
+    = VNat Natural
+    | VClosure (Env Value) Name Expr
     | VNeutral Ty Neutral
 
-type Natural
+
+-- A Neutral is an eliminator stuck on a free variable.
+type Neutral
     = NVar Name
     | NApp Neutral Normal
-    -- | NRec Ty Neutral Normal Normal
-    | NPlus Neutral Nomral -- This is a stuck Plus (Neutral left operand)
+    -- NRec omitted: arithmetic is handled directly via NPlus.
+    | NPlus Neutral Normal  -- stuck plus: neutral left operand, normal right
 
+
+-- A Normal pairs a value with its type for typed read-back.
 type Normal
-    = Normal { normalType  : Ty,
-               normalValue : Value }
+    = Normal
+        { normalType  : Ty
+        , normalValue : Value
+        }
