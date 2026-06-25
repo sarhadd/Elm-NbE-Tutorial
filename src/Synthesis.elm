@@ -1,1 +1,0 @@
--- Infer a type directly from the expression

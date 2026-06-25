@@ -39,7 +39,6 @@ type Expr
 
 -- ── Semantic domain: Values, Neutrals, Normals (§5) ───────────────────────
 
-
 type Value
     = VNat Natural
     | VClosure (Env Value) Name Expr
@@ -60,3 +59,12 @@ type Normal
         { normalType  : Ty
         , normalValue : Value
         }
+
+
+-- Error Types
+
+type alias Error =
+    String
+
+type alias ResultTy =
+    Result Error Ty
