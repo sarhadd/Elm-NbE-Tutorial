@@ -29,12 +29,12 @@ type Ty
 
 
 type Expr
-    = EVar Name
-    | ELambda Name Expr
-    | EApp Expr Expr
-    | EPlus Expr Expr   -- addition on Nat
-    | ELit Natural      -- natural number literal
-    | EAnn Expr Ty
+    = Var Name
+    | Lambda Name Expr
+    | App Expr Expr
+    | Plus Expr Expr   -- replaces Rec
+    | Nat Natural      -- replaces Zero/Add1
+    | Ann Expr Ty
 
 
 -- ── Semantic domain: Values, Neutrals, Normals (§5) ───────────────────────
