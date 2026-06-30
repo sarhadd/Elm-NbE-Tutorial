@@ -1,6 +1,8 @@
 module Test.Generated.Main exposing (main)
 
+import Example
 import NaturalTest
+import TestMain
 
 import Test.Reporter.Reporter exposing (Report(..))
 import Console.Text exposing (UseColor(..))
@@ -11,18 +13,26 @@ main : Test.Runner.Node.TestProgram
 main =
     Test.Runner.Node.run
         { runs = 100
-        , report = ConsoleReport Monochrome
-        , seed = 261460878076222
-        , processes = 22
+        , report = ConsoleReport UseColor
+        , seed = 51911610811099
+        , processes = 24
         , globs =
-            [ "tests/NaturalTest.elm"
-            ]
+            []
         , paths =
-            [ "C:\\Users\\zzm\\Documents\\Summer2026\\Elm-NbE-Tutorial\\tests\\NaturalTest.elm"
+            [ "C:\\Users\\dinas\\OneDrive\\Documents\\GitHub\\Elm-NbE-Tutorial\\tests\\Example.elm"
+            , "C:\\Users\\dinas\\OneDrive\\Documents\\GitHub\\Elm-NbE-Tutorial\\tests\\NaturalTest.elm"
+            , "C:\\Users\\dinas\\OneDrive\\Documents\\GitHub\\Elm-NbE-Tutorial\\tests\\TestMain.elm"
             ]
         }
-        [ ( "NaturalTest"
+        [ ( "Example"
+          , []
+          )
+        , ( "NaturalTest"
           , [ Test.Runner.Node.check NaturalTest.suite
+            ]
+          )
+        , ( "TestMain"
+          , [ Test.Runner.Node.check TestMain.noDefs
             ]
           )
         ]

@@ -2,7 +2,7 @@
     "type": "application",
     "source-directories": [
         "src",
-        "..\\..\\..\\..\\..\\..\\..\\..\\AppData\\Local\\npm-cache\\_npx\\ec987ece94b55230\\node_modules\\elm-test\\elm\\src",
+        "..\\..\\..\\..\\..\\..\\..\\..\\..\\AppData\\Local\\npm-cache\\_npx\\ec987ece94b55230\\node_modules\\elm-test\\elm\\src",
         "..\\..\\..\\..\\..\\src",
         "..\\..\\..\\..\\..\\tests"
     ],

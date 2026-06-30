@@ -2,6 +2,7 @@
 module Types exposing (..)
 
 import Natural exposing (Natural)
+import Dict exposing (Dict)
 
 
 -- ── Shared primitives ─────────────────────────────────────────────────────
@@ -11,8 +12,19 @@ type alias Name =
     String
 
 
-type alias Env a =
-    List ( Name, a )
+type alias Env v =
+    Dict Name v
+
+
+type alias Context =  -- used in Test.elm
+    Env Ty
+
+
+type alias Defs =     -- used in Test.elm
+    Env Normal
+
+type alias Message =
+    String
 
 
 -- ── Type language (§4) ────────────────────────────────────────────────────

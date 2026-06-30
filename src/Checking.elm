@@ -3,7 +3,7 @@
 
 module Checking exposing (..)
 
-import Types exposing (Types)
+import Types exposing (..)
 
 -- Move to Types.elm?
 type alias Ctx =
@@ -29,12 +29,30 @@ synth ctx expr =
                                     Err msg
 
                         other ->
-                            failure ("Not a function type: " ++ Debug.toString other)
+                            Err ("Not a function type: " ++ Debug.toString other)
 
                 Err msg ->
                     Err msg
         -- Rec ...
         -- TODO: Add one for Plus!
+        Plus l r ->
+            case synth ctx l of
+                Ok TNat ->
+                    case synth ctx r of
+                        Ok TNat ->
+                            Ok TNat
+
+                        Ok other ->
+                            Err ("Plus expected Nat on the right, but got " ++ Debug.toString other)
+
+                        Err msg ->
+                            Err msg
+
+                Ok other ->
+                    Err ("Plus expected Nat on the left, but got " ++ Debug.toString other)
+
+                Err msg ->
+                    Err msg
 
         -- Ann switches from synthesis -> checking
         Ann e t ->
@@ -46,7 +64,7 @@ synth ctx expr =
                     Err msg
                     
         other ->
-            failure
+            Err
                 ("Can't find a type for "
                     ++ Debug.toString other
                     ++ ". Try adding a type annotation."
@@ -60,10 +78,10 @@ check ctx expr expectedTy =
             case expectedTy of
                 TArr argT retT ->
                     let
-                        ctx' =
+                        ctxNew =
                             Dict.insert x argT ctx
                     in
-                    check ctx' body retT
+                    check ctxNew body retT
                 other ->
                     Err ("Lambda requires a function type, but got " ++ Debug.toString other)
         

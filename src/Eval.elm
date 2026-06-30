@@ -50,11 +50,11 @@ doApply rator arg =
 -- Attaches new value at the front
 extend : Env Value -> Name -> Value -> Env Value
 extend env x arg =
-    (x, arg) :: env
+    Dict.insert x arg env
 
 
 -- With insiration of Lucas's getEnv function & the tutorial's lookupVar:
-lookupVar : Env -> Name -> Result Error Value
+lookupVar : Env Value -> Name -> Result Error Value
 lookupVar env x =
   case Dict.get x env of
     Just v -> Ok v
