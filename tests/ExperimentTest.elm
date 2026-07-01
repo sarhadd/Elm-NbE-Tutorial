@@ -56,49 +56,6 @@ suite =
                         (Natural.compare  Natural.two  Natural.five)
             ]
 
-        , describe "Peano only: structural induction via pattern match"
-            -- elm-natural is opaque — you cannot write these directly.
-            [ test "count Add1 layers to measure a number" <|
-                \_ ->
-                    let
-                        depth n =
-                            case n of
-                                PeanoNat.Zero   -> 0
-                                PeanoNat.Add1 p -> 1 + depth p
-                    in
-                    Expect.equal (depth PeanoNat.three) 3
-
-            , test "predecessor by stripping one Add1" <|
-                \_ ->
-                    let
-                        pred n =
-                            case n of
-                                PeanoNat.Zero   -> PeanoNat.Zero
-                                PeanoNat.Add1 p -> p
-                    in
-                    Expect.equal (PeanoNat.toInt (pred PeanoNat.five)) 4
-
-            , test "custom isEven by mutual recursion on structure" <|
-                \_ ->
-                    let
-                        myEven n =
-                            case n of
-                                PeanoNat.Zero   -> True
-                                PeanoNat.Add1 p -> myOdd p
-                        myOdd n =
-                            case n of
-                                PeanoNat.Zero   -> False
-                                PeanoNat.Add1 p -> myEven p
-                    in
-                    Expect.equal
-                        [ myEven PeanoNat.zero
-                        , myEven PeanoNat.two
-                        , myEven PeanoNat.four
-                        , myOdd  PeanoNat.one
-                        , myOdd  PeanoNat.three
-                        ]
-                        [ True, True, True, True, True ]
-            ]
 
         , describe "elm-natural only: larger numbers stay fast"
             [ test "fromSafeInt 1000 round-trips through toInt" <|
@@ -119,3 +76,48 @@ suite =
                         200
             ]
         ]
+
+
+        -- , describe "Peano only: structural induction via pattern match"
+        --     -- elm-natural is opaque — you cannot write these directly.
+        --     [ test "count Add1 layers to measure a number" <|
+        --         \_ ->
+        --             let
+        --                 depth n =
+        --                     case n of
+        --                         PeanoNat.Zero   -> 0
+        --                         PeanoNat.Add1 p -> 1 + depth p
+        --             in
+        --             Expect.equal (depth PeanoNat.three) 3
+
+        --     , test "predecessor by stripping one Add1" <|
+        --         \_ ->
+        --             let
+        --                 pred n =
+        --                     case n of
+        --                         PeanoNat.Zero   -> PeanoNat.Zero
+        --                         PeanoNat.Add1 p -> p
+        --             in
+        --             Expect.equal (PeanoNat.toInt (pred PeanoNat.five)) 4
+
+        --     , test "custom isEven by mutual recursion on structure" <|
+        --         \_ ->
+        --             let
+        --                 myEven n =
+        --                     case n of
+        --                         PeanoNat.Zero   -> True
+        --                         PeanoNat.Add1 p -> myOdd p
+        --                 myOdd n =
+        --                     case n of
+        --                         PeanoNat.Zero   -> False
+        --                         PeanoNat.Add1 p -> myEven p
+        --             in
+        --             Expect.equal
+        --                 [ myEven PeanoNat.zero
+        --                 , myEven PeanoNat.two
+        --                 , myEven PeanoNat.four
+        --                 , myOdd  PeanoNat.one
+        --                 , myOdd  PeanoNat.three
+        --                 ]
+        --                 [ True, True, True, True, True ]
+        --     ]

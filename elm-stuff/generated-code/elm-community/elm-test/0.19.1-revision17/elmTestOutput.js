@@ -2600,7 +2600,7 @@ var $elm$core$Basics$LT = {$: 'LT'};
 var $author$project$Test$Reporter$Reporter$ConsoleReport = function (a) {
 	return {$: 'ConsoleReport', a: a};
 };
-var $author$project$Console$Text$UseColor = {$: 'UseColor'};
+var $author$project$Console$Text$Monochrome = {$: 'Monochrome'};
 var $elm$core$Debug$todo = _Debug_todo;
 var $author$project$Test$Runner$Node$checkHelperReplaceMe___ = function (_v0) {
 	return _Debug_todo(
@@ -7607,7 +7607,6 @@ var $author$project$Test$Runner$Node$run = F2(
 				});
 		}
 	});
-var $author$project$PeanoNat$Zero = {$: 'Zero'};
 var $author$project$Natural$Natural = function (a) {
 	return {$: 'Natural', a: a};
 };
@@ -7840,6 +7839,7 @@ var $elm_explorations$test$Expect$equal = A2($elm_explorations$test$Expect$equat
 var $author$project$Natural$five = $author$project$Natural$Natural(
 	_List_fromArray(
 		[5]));
+var $author$project$PeanoNat$Zero = {$: 'Zero'};
 var $author$project$PeanoNat$one = $author$project$PeanoNat$Add1($author$project$PeanoNat$Zero);
 var $author$project$PeanoNat$two = $author$project$PeanoNat$Add1($author$project$PeanoNat$one);
 var $author$project$PeanoNat$three = $author$project$PeanoNat$Add1($author$project$PeanoNat$two);
@@ -8282,7 +8282,6 @@ var $author$project$PeanoNat$toInt = function (n) {
 var $author$project$Natural$two = $author$project$Natural$Natural(
 	_List_fromArray(
 		[2]));
-var $author$project$PeanoNat$zero = $author$project$PeanoNat$Zero;
 var $author$project$ExperimentTest$suite = A2(
 	$elm_explorations$test$Test$describe,
 	'Peano vs elm-natural',
@@ -8338,87 +8337,13 @@ var $author$project$ExperimentTest$suite = A2(
 				])),
 			A2(
 			$elm_explorations$test$Test$describe,
-			'Peano only: structural induction via pattern match',
-			_List_fromArray(
-				[
-					A2(
-					$elm_explorations$test$Test$test,
-					'count Add1 layers to measure a number',
-					function (_v4) {
-						var depth = function (n) {
-							if (n.$ === 'Zero') {
-								return 0;
-							} else {
-								var p = n.a;
-								return 1 + depth(p);
-							}
-						};
-						return A2(
-							$elm_explorations$test$Expect$equal,
-							depth($author$project$PeanoNat$three),
-							3);
-					}),
-					A2(
-					$elm_explorations$test$Test$test,
-					'predecessor by stripping one Add1',
-					function (_v6) {
-						var pred = function (n) {
-							if (n.$ === 'Zero') {
-								return $author$project$PeanoNat$Zero;
-							} else {
-								var p = n.a;
-								return p;
-							}
-						};
-						return A2(
-							$elm_explorations$test$Expect$equal,
-							$author$project$PeanoNat$toInt(
-								pred($author$project$PeanoNat$five)),
-							4);
-					}),
-					A2(
-					$elm_explorations$test$Test$test,
-					'custom isEven by mutual recursion on structure',
-					function (_v8) {
-						var myEven = function (n) {
-							if (n.$ === 'Zero') {
-								return true;
-							} else {
-								var p = n.a;
-								return myOdd(p);
-							}
-						};
-						var myOdd = function (n) {
-							if (n.$ === 'Zero') {
-								return false;
-							} else {
-								var p = n.a;
-								return myEven(p);
-							}
-						};
-						return A2(
-							$elm_explorations$test$Expect$equal,
-							_List_fromArray(
-								[
-									myEven($author$project$PeanoNat$zero),
-									myEven($author$project$PeanoNat$two),
-									myEven($author$project$PeanoNat$four),
-									myOdd($author$project$PeanoNat$one),
-									myOdd($author$project$PeanoNat$three)
-								]),
-							_List_fromArray(
-								[true, true, true, true, true]));
-					})
-				])),
-			A2(
-			$elm_explorations$test$Test$describe,
 			'elm-natural only: larger numbers stay fast',
 			_List_fromArray(
 				[
 					A2(
 					$elm_explorations$test$Test$test,
 					'fromSafeInt 1000 round-trips through toInt',
-					function (_v11) {
+					function (_v4) {
 						return A2(
 							$elm_explorations$test$Expect$equal,
 							$author$project$Natural$toInt(
@@ -8428,7 +8353,7 @@ var $author$project$ExperimentTest$suite = A2(
 					A2(
 					$elm_explorations$test$Test$test,
 					'add two 100s gives 200',
-					function (_v12) {
+					function (_v5) {
 						var n = $author$project$Natural$fromSafeInt(100);
 						return A2(
 							$elm_explorations$test$Expect$equal,
@@ -8490,6 +8415,7 @@ var $author$project$PeanoNat$fromInt = function (n) {
 	return (n < 0) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
 		$author$project$PeanoNat$fromIntHelper(n));
 };
+var $author$project$PeanoNat$zero = $author$project$PeanoNat$Zero;
 var $author$project$PeanoNat$fromSafeInt = A2(
 	$elm$core$Basics$composeR,
 	$author$project$PeanoNat$fromInt,
@@ -9059,9 +8985,9 @@ var $author$project$Test$Generated$Main$main = A2(
 		paths: _List_fromArray(
 			['C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\Example.elm', 'C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\ExperimentTest.elm', 'C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\NaturalTest.elm', 'C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\TestMain.elm']),
 		processes: 22,
-		report: $author$project$Test$Reporter$Reporter$ConsoleReport($author$project$Console$Text$UseColor),
+		report: $author$project$Test$Reporter$Reporter$ConsoleReport($author$project$Console$Text$Monochrome),
 		runs: 100,
-		seed: 174854158328153
+		seed: 337779823637829
 	},
 	_List_fromArray(
 		[
@@ -9093,7 +9019,7 @@ var $author$project$Test$Generated$Main$main = A2(
 _Platform_export({'Test':{'Generated':{'Main':{'init':$author$project$Test$Generated$Main$main($elm$json$Json$Decode$int)(0)}}}});}(this));
 return this.Elm;
 })({});
-var pipeFilename = "\\\\.\\pipe\\elm_test-50504-1";
+var pipeFilename = "\\\\.\\pipe\\elm_test-60304-1";
 var net = require('net'),
   client = net.createConnection(pipeFilename);
 

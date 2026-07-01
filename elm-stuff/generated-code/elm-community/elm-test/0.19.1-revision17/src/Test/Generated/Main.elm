@@ -14,8 +14,8 @@ main : Test.Runner.Node.TestProgram
 main =
     Test.Runner.Node.run
         { runs = 100
-        , report = ConsoleReport UseColor
-        , seed = 174854158328153
+        , report = ConsoleReport Monochrome
+        , seed = 337779823637829
         , processes = 22
         , globs =
             []

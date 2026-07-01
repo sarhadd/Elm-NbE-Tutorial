@@ -1,60 +1,45 @@
--- Readback TODO
-
 module Readback exposing (..)
 
 import Types exposing (..)
-import Fresh exposing (..)
 import Eval exposing (doApply)
 
 
-readBackNormal : List Name -> Normal -> Expr
-readBackNormal used (Normal t v) =
-    readBack used t v
+readBackNormal : Int -> Normal -> Expr
+readBackNormal n norm =
+    readBackValue n (normalType norm) (normalValue norm)
 
-readBack : List Name -> Ty -> Value -> Expr
-readBack used ty v =
+
+readBackValue : Int -> Ty -> Value -> Expr
+readBackValue n ty v =
     case ( ty, v ) of
-        ( TNat, VNat n ) ->
-            ELit n
+        ( TNat, VNat k ) ->
+            Nat k
 
         ( TArr t1 t2, fun ) ->
             let
                 x =
-                    freshen used (argName fun)
+                    "x" ++ String.fromInt n
 
                 xVal =
                     VNeutral t1 (NVar x)
             in
-            ELambda x
-                (readBack (x :: used) t2 (doApply fun xVal))
+            Lambda x (readBackValue (n + 1) t2 (doApply fun xVal))
 
-        ( t1, VNeutral t2 neu ) ->
-            -- Note: checking t1 and t2 for equality here is a good way to find bugs,
-            -- but is not strictly necessary.
-            if t1 == t2 then
-                readBackNeutral used neu
-
-            else
-                Debug.todo "Internal error: mismatched types at readBackNeutral"
+        ( _, VNeutral _ neu ) ->
+            readBackNeutral n neu
 
         _ ->
-            Debug.todo "Internal error: mismatched type and value at readBack"
-
-argName : Value -> Name
-argName fun =
-    case fun of
-        VClosure _ x _ ->
-            x
-
-        _ ->
-            "x"
+            Debug.todo "Internal error: mismatched type and value at readBackValue"
 
 
-readBackNeutral : List Name -> Neutral -> Expr
-readBackNeutral used neu =
+readBackNeutral : Int -> Neutral -> Expr
+readBackNeutral n neu =
     case neu of
         NVar x ->
-            EVar x
+            Var x
 
         NApp rator arg ->
-            EApp (readBackNeutral used rator) (readBackNormal used arg)
+            App (readBackNeutral n rator) (readBackNormal n arg)
+
+        NPlus l r ->
+            Plus (readBackNeutral n l) (readBackNormal n r)
