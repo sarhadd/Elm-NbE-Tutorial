@@ -73,6 +73,17 @@ type Normal
         }
 
 
+-- Normal accessors
+
+normalType : Normal -> Ty
+normalType (Normal r) =
+    r.normalType
+
+normalValue : Normal -> Value
+normalValue (Normal r) =
+    r.normalValue
+
+
 -- Error Types
 
 type alias Error =

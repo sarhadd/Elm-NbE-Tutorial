@@ -42,7 +42,7 @@ doApply : Value -> Value -> Value
 doApply rator arg =
     case rator of
         VClosure env x body ->
-            eval (extend x arg) body
+            eval (extend env x arg) body
         _ -> 
             Debug.todo  ("Error: applying non-function")
 

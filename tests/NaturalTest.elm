@@ -2,7 +2,7 @@ module NaturalTest exposing (..)
 
 import Expect
 import Test exposing (..)
-import Natural exposing (..)
+import PeanoNat exposing (..)
 
 
 suite : Test
@@ -72,11 +72,11 @@ suite =
             ]
         , describe "compare"
             [ test "compare two five == LT" <|
-                \_ -> Expect.equal (Natural.compare two five) LT
+                \_ -> Expect.equal (PeanoNat.compare two five) LT
             , test "compare five five == EQ" <|
-                \_ -> Expect.equal (Natural.compare five five) EQ
+                \_ -> Expect.equal (PeanoNat.compare five five) EQ
             , test "compare five two == GT" <|
-                \_ -> Expect.equal (Natural.compare five two) GT
+                \_ -> Expect.equal (PeanoNat.compare five two) GT
             ]
         , describe "comparison predicates"
             [ test "two isLessThan five" <|
@@ -90,9 +90,9 @@ suite =
             , test "two isGreaterThanOrEqual two" <|
                 \_ -> Expect.equal (two |> isGreaterThanOrEqual two) True
             , test "max two five == five" <|
-                \_ -> Expect.equal (Natural.max two five) five
+                \_ -> Expect.equal (PeanoNat.max two five) five
             , test "min two five == two" <|
-                \_ -> Expect.equal (Natural.min two five) two
+                \_ -> Expect.equal (PeanoNat.min two five) two
             ]
         , describe "predicates"
             [ test "isZero zero == True" <|

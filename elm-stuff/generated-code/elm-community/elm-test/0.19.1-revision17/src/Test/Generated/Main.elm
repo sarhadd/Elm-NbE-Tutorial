@@ -1,6 +1,7 @@
 module Test.Generated.Main exposing (main)
 
 import Example
+import ExperimentTest
 import NaturalTest
 import TestMain
 
@@ -14,18 +15,24 @@ main =
     Test.Runner.Node.run
         { runs = 100
         , report = ConsoleReport UseColor
-        , seed = 51911610811099
-        , processes = 24
+        , seed = 174854158328153
+        , processes = 22
         , globs =
             []
         , paths =
-            [ "C:\\Users\\dinas\\OneDrive\\Documents\\GitHub\\Elm-NbE-Tutorial\\tests\\Example.elm"
-            , "C:\\Users\\dinas\\OneDrive\\Documents\\GitHub\\Elm-NbE-Tutorial\\tests\\NaturalTest.elm"
-            , "C:\\Users\\dinas\\OneDrive\\Documents\\GitHub\\Elm-NbE-Tutorial\\tests\\TestMain.elm"
+            [ "C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\Example.elm"
+            , "C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\ExperimentTest.elm"
+            , "C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\NaturalTest.elm"
+            , "C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\TestMain.elm"
             ]
         }
         [ ( "Example"
-          , []
+          , [ Test.Runner.Node.check Example.placeholder
+            ]
+          )
+        , ( "ExperimentTest"
+          , [ Test.Runner.Node.check ExperimentTest.suite
+            ]
           )
         , ( "NaturalTest"
           , [ Test.Runner.Node.check NaturalTest.suite

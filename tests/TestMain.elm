@@ -3,7 +3,7 @@ module TestMain exposing (..)
 import Dict
 import Types exposing (..)
 import Checking exposing (synth)
-import Eval exposing (eval, extend)
+import Eval exposing (eval)
 
 noDefs : Defs
 noDefs =
@@ -26,7 +26,7 @@ normWithDefs defs e =
                 v =
                     eval (defsToEnv defs) e
             in
-            Ok (Normal t v)
+            Ok (Normal { normalType = t, normalValue = v })
 
 
 addDefs : Defs -> List ( Name, Expr ) -> Result Message Defs
@@ -41,7 +41,7 @@ addDefs defs pairs =
                     Err msg
 
                 Ok norm ->
-                    addDefs (extend defs x norm) more
+                    addDefs (Dict.insert x norm defs) more
 
 
 definedNames : Defs -> List Name

@@ -2600,7 +2600,7 @@ var $elm$core$Basics$LT = {$: 'LT'};
 var $author$project$Test$Reporter$Reporter$ConsoleReport = function (a) {
 	return {$: 'ConsoleReport', a: a};
 };
-var $author$project$Console$Text$Monochrome = {$: 'Monochrome'};
+var $author$project$Console$Text$UseColor = {$: 'UseColor'};
 var $elm$core$Debug$todo = _Debug_todo;
 var $author$project$Test$Runner$Node$checkHelperReplaceMe___ = function (_v0) {
 	return _Debug_todo(
@@ -3007,6 +3007,10 @@ var $elm$core$Result$isOk = function (result) {
 	}
 };
 var $elm$json$Json$Decode$int = _Json_decodeInt;
+var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
+var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
+var $author$project$TestMain$noDefs = $elm$core$Dict$empty;
+var $author$project$Example$placeholder = _Utils_Tuple0;
 var $author$project$Test$Runner$Node$Receive = function (a) {
 	return {$: 'Receive', a: a};
 };
@@ -3109,8 +3113,6 @@ var $elm$core$Basics$identity = function (x) {
 var $elm$core$Set$Set_elm_builtin = function (a) {
 	return {$: 'Set_elm_builtin', a: a};
 };
-var $elm$core$Dict$RBEmpty_elm_builtin = {$: 'RBEmpty_elm_builtin'};
-var $elm$core$Dict$empty = $elm$core$Dict$RBEmpty_elm_builtin;
 var $elm$core$Set$empty = $elm$core$Set$Set_elm_builtin($elm$core$Dict$empty);
 var $elm$core$Dict$Black = {$: 'Black'};
 var $elm$core$Dict$RBNode_elm_builtin = F5(
@@ -7605,20 +7607,163 @@ var $author$project$Test$Runner$Node$run = F2(
 				});
 		}
 	});
-var $author$project$Natural$Add1 = function (a) {
+var $author$project$PeanoNat$Zero = {$: 'Zero'};
+var $author$project$Natural$Natural = function (a) {
+	return {$: 'Natural', a: a};
+};
+var $author$project$Natural$numBits = 26;
+var $elm$core$Basics$pow = _Basics_pow;
+var $author$project$Natural$base = A2($elm$core$Basics$pow, 2, $author$project$Natural$numBits);
+var $elm$core$Basics$modBy = _Basics_modBy;
+var $author$project$Natural$iDivModBy = F2(
+	function (divisor, dividend) {
+		return _Utils_Tuple2(
+			(dividend / divisor) | 0,
+			A2($elm$core$Basics$modBy, divisor, dividend));
+	});
+var $author$project$Natural$addHelper = F4(
+	function (xsLE, ysLE, carry, zsBE) {
+		addHelper:
+		while (true) {
+			var _v0 = _Utils_Tuple2(xsLE, ysLE);
+			if (!_v0.a.b) {
+				if (!_v0.b.b) {
+					var finalZsBE = (!carry) ? zsBE : A2($elm$core$List$cons, carry, zsBE);
+					return $elm$core$List$reverse(finalZsBE);
+				} else {
+					var _v3 = _v0.b;
+					var y = _v3.a;
+					var restYsLE = _v3.b;
+					var _v4 = A2($author$project$Natural$iDivModBy, $author$project$Natural$base, y + carry);
+					var newCarry = _v4.a;
+					var z = _v4.b;
+					var $temp$xsLE = _List_Nil,
+						$temp$ysLE = restYsLE,
+						$temp$carry = newCarry,
+						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
+					xsLE = $temp$xsLE;
+					ysLE = $temp$ysLE;
+					carry = $temp$carry;
+					zsBE = $temp$zsBE;
+					continue addHelper;
+				}
+			} else {
+				if (!_v0.b.b) {
+					var _v1 = _v0.a;
+					var x = _v1.a;
+					var restXsLE = _v1.b;
+					var _v2 = A2($author$project$Natural$iDivModBy, $author$project$Natural$base, x + carry);
+					var newCarry = _v2.a;
+					var z = _v2.b;
+					var $temp$xsLE = restXsLE,
+						$temp$ysLE = _List_Nil,
+						$temp$carry = newCarry,
+						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
+					xsLE = $temp$xsLE;
+					ysLE = $temp$ysLE;
+					carry = $temp$carry;
+					zsBE = $temp$zsBE;
+					continue addHelper;
+				} else {
+					var _v5 = _v0.a;
+					var x = _v5.a;
+					var restXsLE = _v5.b;
+					var _v6 = _v0.b;
+					var y = _v6.a;
+					var restYsLE = _v6.b;
+					var _v7 = A2($author$project$Natural$iDivModBy, $author$project$Natural$base, (x + y) + carry);
+					var newCarry = _v7.a;
+					var z = _v7.b;
+					var $temp$xsLE = restXsLE,
+						$temp$ysLE = restYsLE,
+						$temp$carry = newCarry,
+						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
+					xsLE = $temp$xsLE;
+					ysLE = $temp$ysLE;
+					carry = $temp$carry;
+					zsBE = $temp$zsBE;
+					continue addHelper;
+				}
+			}
+		}
+	});
+var $author$project$Natural$add = F2(
+	function (_v0, _v1) {
+		var xsLE = _v0.a;
+		var ysLE = _v1.a;
+		return $author$project$Natural$Natural(
+			A4($author$project$Natural$addHelper, xsLE, ysLE, 0, _List_Nil));
+	});
+var $author$project$PeanoNat$Add1 = function (a) {
 	return {$: 'Add1', a: a};
 };
-var $author$project$Natural$add = F2(
+var $author$project$PeanoNat$add = F2(
 	function (m, n) {
 		if (m.$ === 'Zero') {
 			return n;
 		} else {
 			var p = m.a;
-			return $author$project$Natural$Add1(
-				A2($author$project$Natural$add, p, n));
+			return $author$project$PeanoNat$Add1(
+				A2($author$project$PeanoNat$add, p, n));
 		}
 	});
+var $author$project$Natural$compareLEHelper = F4(
+	function (a, b, xsLE, ysLE) {
+		compareLEHelper:
+		while (true) {
+			var _v0 = _Utils_Tuple2(xsLE, ysLE);
+			if (!_v0.a.b) {
+				if (!_v0.b.b) {
+					return A2($elm$core$Basics$compare, a, b);
+				} else {
+					return $elm$core$Basics$LT;
+				}
+			} else {
+				if (!_v0.b.b) {
+					return $elm$core$Basics$GT;
+				} else {
+					var _v1 = _v0.a;
+					var x = _v1.a;
+					var xsLERest = _v1.b;
+					var _v2 = _v0.b;
+					var y = _v2.a;
+					var ysLERest = _v2.b;
+					if (_Utils_eq(x, y)) {
+						var $temp$a = a,
+							$temp$b = b,
+							$temp$xsLE = xsLERest,
+							$temp$ysLE = ysLERest;
+						a = $temp$a;
+						b = $temp$b;
+						xsLE = $temp$xsLE;
+						ysLE = $temp$ysLE;
+						continue compareLEHelper;
+					} else {
+						var $temp$a = x,
+							$temp$b = y,
+							$temp$xsLE = xsLERest,
+							$temp$ysLE = ysLERest;
+						a = $temp$a;
+						b = $temp$b;
+						xsLE = $temp$xsLE;
+						ysLE = $temp$ysLE;
+						continue compareLEHelper;
+					}
+				}
+			}
+		}
+	});
+var $author$project$Natural$compareLE = F2(
+	function (xsLE, ysLE) {
+		return A4($author$project$Natural$compareLEHelper, 0, 0, xsLE, ysLE);
+	});
 var $author$project$Natural$compare = F2(
+	function (_v0, _v1) {
+		var xsLE = _v0.a;
+		var ysLE = _v1.a;
+		return A2($author$project$Natural$compareLE, xsLE, ysLE);
+	});
+var $author$project$PeanoNat$compare = F2(
 	function (m, n) {
 		compare:
 		while (true) {
@@ -7692,25 +7837,353 @@ var $elm_explorations$test$Expect$equateWith = F4(
 		return usesFloats ? $elm_explorations$test$Expect$fail(floatError) : A5($elm_explorations$test$Expect$testWith, $elm_explorations$test$Test$Runner$Failure$Equality, reason, comparison, b, a);
 	});
 var $elm_explorations$test$Expect$equal = A2($elm_explorations$test$Expect$equateWith, 'Expect.equal', $elm$core$Basics$eq);
-var $author$project$Natural$Zero = {$: 'Zero'};
-var $author$project$Natural$one = $author$project$Natural$Add1($author$project$Natural$Zero);
-var $author$project$Natural$two = $author$project$Natural$Add1($author$project$Natural$one);
-var $author$project$Natural$three = $author$project$Natural$Add1($author$project$Natural$two);
-var $author$project$Natural$four = $author$project$Natural$Add1($author$project$Natural$three);
-var $author$project$Natural$five = $author$project$Natural$Add1($author$project$Natural$four);
-var $author$project$Natural$fromIntHelper = function (n) {
-	return (!n) ? $author$project$Natural$Zero : $author$project$Natural$Add1(
-		$author$project$Natural$fromIntHelper(n - 1));
+var $author$project$Natural$five = $author$project$Natural$Natural(
+	_List_fromArray(
+		[5]));
+var $author$project$PeanoNat$one = $author$project$PeanoNat$Add1($author$project$PeanoNat$Zero);
+var $author$project$PeanoNat$two = $author$project$PeanoNat$Add1($author$project$PeanoNat$one);
+var $author$project$PeanoNat$three = $author$project$PeanoNat$Add1($author$project$PeanoNat$two);
+var $author$project$PeanoNat$four = $author$project$PeanoNat$Add1($author$project$PeanoNat$three);
+var $author$project$PeanoNat$five = $author$project$PeanoNat$Add1($author$project$PeanoNat$four);
+var $author$project$Natural$four = $author$project$Natural$Natural(
+	_List_fromArray(
+		[4]));
+var $author$project$Natural$quotientModBy = F2(
+	function (divisor, dividend) {
+		return _Utils_Tuple2(
+			$elm$core$Basics$floor(dividend / divisor),
+			A2($elm$core$Basics$modBy, divisor, dividend));
+	});
+var $author$project$Natural$fromIntHelper = F2(
+	function (digitsBE, n) {
+		fromIntHelper:
+		while (true) {
+			if (!n) {
+				return $elm$core$List$reverse(digitsBE);
+			} else {
+				var _v0 = A2($author$project$Natural$quotientModBy, $author$project$Natural$base, n);
+				var q = _v0.a;
+				var r = _v0.b;
+				var $temp$digitsBE = A2($elm$core$List$cons, r, digitsBE),
+					$temp$n = q;
+				digitsBE = $temp$digitsBE;
+				n = $temp$n;
+				continue fromIntHelper;
+			}
+		}
+	});
+var $author$project$Natural$maxBits = 53;
+var $author$project$Natural$maxSafeInt = A2($elm$core$Basics$pow, 2, $author$project$Natural$maxBits) - 1;
+var $author$project$Natural$fromInt = function (x) {
+	return ((x >= 0) && (_Utils_cmp(x, $author$project$Natural$maxSafeInt) < 1)) ? $elm$core$Maybe$Just(
+		$author$project$Natural$Natural(
+			A2($author$project$Natural$fromIntHelper, _List_Nil, x))) : $elm$core$Maybe$Nothing;
 };
-var $author$project$Natural$fromInt = function (n) {
-	return (n < 0) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
-		$author$project$Natural$fromIntHelper(n));
-};
-var $author$project$Natural$zero = $author$project$Natural$Zero;
+var $author$project$Natural$zero = $author$project$Natural$Natural(_List_Nil);
 var $author$project$Natural$fromSafeInt = A2(
 	$elm$core$Basics$composeR,
 	$author$project$Natural$fromInt,
 	$elm$core$Maybe$withDefault($author$project$Natural$zero));
+var $author$project$Natural$sdMulHelper = F4(
+	function (xsLE, y, carry, zsBE) {
+		sdMulHelper:
+		while (true) {
+			if (!xsLE.b) {
+				return (!carry) ? zsBE : A2($elm$core$List$cons, carry, zsBE);
+			} else {
+				var x = xsLE.a;
+				var restXsLE = xsLE.b;
+				var product = (x * y) + carry;
+				var _v1 = A2($author$project$Natural$iDivModBy, $author$project$Natural$base, product);
+				var newCarry = _v1.a;
+				var z = _v1.b;
+				var $temp$xsLE = restXsLE,
+					$temp$y = y,
+					$temp$carry = newCarry,
+					$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
+				xsLE = $temp$xsLE;
+				y = $temp$y;
+				carry = $temp$carry;
+				zsBE = $temp$zsBE;
+				continue sdMulHelper;
+			}
+		}
+	});
+var $author$project$Natural$sdMul = F2(
+	function (xsLE, y) {
+		var _v0 = _Utils_Tuple2(xsLE, y);
+		_v0$0:
+		while (true) {
+			switch (_v0.b) {
+				case 0:
+					if (!_v0.a.b) {
+						break _v0$0;
+					} else {
+						return _List_Nil;
+					}
+				case 1:
+					if (!_v0.a.b) {
+						break _v0$0;
+					} else {
+						return xsLE;
+					}
+				default:
+					if (!_v0.a.b) {
+						break _v0$0;
+					} else {
+						return $elm$core$List$reverse(
+							A4($author$project$Natural$sdMulHelper, xsLE, y, 0, _List_Nil));
+					}
+			}
+		}
+		return _List_Nil;
+	});
+var $author$project$Natural$mulHelper = F3(
+	function (xsLE, ysBE, zsLE) {
+		mulHelper:
+		while (true) {
+			if (!ysBE.b) {
+				return zsLE;
+			} else {
+				var y = ysBE.a;
+				var restYsBE = ysBE.b;
+				var augend = _Utils_eq(zsLE, _List_Nil) ? _List_Nil : A2($elm$core$List$cons, 0, zsLE);
+				var addend = A2($author$project$Natural$sdMul, xsLE, y);
+				var partialSum = A4($author$project$Natural$addHelper, augend, addend, 0, _List_Nil);
+				var $temp$xsLE = xsLE,
+					$temp$ysBE = restYsBE,
+					$temp$zsLE = partialSum;
+				xsLE = $temp$xsLE;
+				ysBE = $temp$ysBE;
+				zsLE = $temp$zsLE;
+				continue mulHelper;
+			}
+		}
+	});
+var $author$project$Natural$shiftLeftByHelper = F2(
+	function (n, digitsLE) {
+		shiftLeftByHelper:
+		while (true) {
+			if (!n) {
+				return digitsLE;
+			} else {
+				var $temp$n = n - 1,
+					$temp$digitsLE = A2($elm$core$List$cons, 0, digitsLE);
+				n = $temp$n;
+				digitsLE = $temp$digitsLE;
+				continue shiftLeftByHelper;
+			}
+		}
+	});
+var $author$project$Natural$shiftLeftBy = F2(
+	function (n, digitsLE) {
+		if (!digitsLE.b) {
+			return _List_Nil;
+		} else {
+			return A2($author$project$Natural$shiftLeftByHelper, n, digitsLE);
+		}
+	});
+var $author$project$Natural$splitAt = F2(
+	function (n, list) {
+		return _Utils_Tuple2(
+			A2($elm$core$List$take, n, list),
+			A2($elm$core$List$drop, n, list));
+	});
+var $author$project$Natural$removeLeadingZeros = function (digits) {
+	removeLeadingZeros:
+	while (true) {
+		if (!digits.b) {
+			return _List_Nil;
+		} else {
+			var d = digits.a;
+			var restDigits = digits.b;
+			if (!d) {
+				var $temp$digits = restDigits;
+				digits = $temp$digits;
+				continue removeLeadingZeros;
+			} else {
+				return digits;
+			}
+		}
+	}
+};
+var $author$project$Natural$subHelper = F4(
+	function (xsLE, ysLE, carry, zsBE) {
+		subHelper:
+		while (true) {
+			var _v0 = _Utils_Tuple2(xsLE, ysLE);
+			if (!_v0.a.b) {
+				if (!_v0.b.b) {
+					return (!carry) ? $elm$core$List$reverse(
+						$author$project$Natural$removeLeadingZeros(zsBE)) : _List_Nil;
+				} else {
+					var _v3 = _v0.b;
+					var y = _v3.a;
+					var restYsLE = _v3.b;
+					var _v4 = A2($author$project$Natural$quotientModBy, $author$project$Natural$base, carry - y);
+					var newCarry = _v4.a;
+					var z = _v4.b;
+					var $temp$xsLE = _List_Nil,
+						$temp$ysLE = restYsLE,
+						$temp$carry = newCarry,
+						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
+					xsLE = $temp$xsLE;
+					ysLE = $temp$ysLE;
+					carry = $temp$carry;
+					zsBE = $temp$zsBE;
+					continue subHelper;
+				}
+			} else {
+				if (!_v0.b.b) {
+					var _v1 = _v0.a;
+					var x = _v1.a;
+					var restXsLE = _v1.b;
+					var _v2 = A2($author$project$Natural$quotientModBy, $author$project$Natural$base, x + carry);
+					var newCarry = _v2.a;
+					var z = _v2.b;
+					var $temp$xsLE = restXsLE,
+						$temp$ysLE = _List_Nil,
+						$temp$carry = newCarry,
+						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
+					xsLE = $temp$xsLE;
+					ysLE = $temp$ysLE;
+					carry = $temp$carry;
+					zsBE = $temp$zsBE;
+					continue subHelper;
+				} else {
+					var _v5 = _v0.a;
+					var x = _v5.a;
+					var restXsLE = _v5.b;
+					var _v6 = _v0.b;
+					var y = _v6.a;
+					var restYsLE = _v6.b;
+					var _v7 = A2($author$project$Natural$quotientModBy, $author$project$Natural$base, (x - y) + carry);
+					var newCarry = _v7.a;
+					var z = _v7.b;
+					var $temp$xsLE = restXsLE,
+						$temp$ysLE = restYsLE,
+						$temp$carry = newCarry,
+						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
+					xsLE = $temp$xsLE;
+					ysLE = $temp$ysLE;
+					carry = $temp$carry;
+					zsBE = $temp$zsBE;
+					continue subHelper;
+				}
+			}
+		}
+	});
+var $author$project$Natural$karatsuba = F2(
+	function (xsLE, ysLE) {
+		var _v0 = _Utils_Tuple2(xsLE, ysLE);
+		if (!_v0.a.b) {
+			return _List_Nil;
+		} else {
+			if (!_v0.b.b) {
+				return _List_Nil;
+			} else {
+				if ((_v0.a.a === 1) && (!_v0.a.b.b)) {
+					var _v1 = _v0.a;
+					return ysLE;
+				} else {
+					if ((_v0.b.a === 1) && (!_v0.b.b.b)) {
+						var _v2 = _v0.b;
+						return xsLE;
+					} else {
+						var yLen = $elm$core$List$length(ysLE);
+						var xLen = $elm$core$List$length(xsLE);
+						if ((xLen < 1000) || (yLen < 1000)) {
+							return A3(
+								$author$project$Natural$mulHelper,
+								xsLE,
+								$elm$core$List$reverse(ysLE),
+								_List_Nil);
+						} else {
+							var n = A2($elm$core$Basics$max, xLen, yLen);
+							var m = (n / 2) | 0;
+							var m2 = 2 * m;
+							var _v3 = A2($author$project$Natural$splitAt, m, ysLE);
+							var y0 = _v3.a;
+							var y1 = _v3.b;
+							var _v4 = A2($author$project$Natural$splitAt, m, xsLE);
+							var x0 = _v4.a;
+							var x1 = _v4.b;
+							var z0 = A2($author$project$Natural$karatsuba, x0, y0);
+							var t1 = A2(
+								$author$project$Natural$karatsuba,
+								A4($author$project$Natural$addHelper, x0, x1, 0, _List_Nil),
+								A4($author$project$Natural$addHelper, y0, y1, 0, _List_Nil));
+							var t2 = A4($author$project$Natural$subHelper, t1, z0, 0, _List_Nil);
+							var z2 = A2($author$project$Natural$karatsuba, x1, y1);
+							var z1 = A4($author$project$Natural$subHelper, t2, z2, 0, _List_Nil);
+							var t3 = A4(
+								$author$project$Natural$addHelper,
+								A2($author$project$Natural$shiftLeftBy, m, z1),
+								z0,
+								0,
+								_List_Nil);
+							return A4(
+								$author$project$Natural$addHelper,
+								A2($author$project$Natural$shiftLeftBy, m2, z2),
+								t3,
+								0,
+								_List_Nil);
+						}
+					}
+				}
+			}
+		}
+	});
+var $author$project$Natural$mul = F2(
+	function (_v0, _v1) {
+		var xsLE = _v0.a;
+		var ysLE = _v1.a;
+		return $author$project$Natural$Natural(
+			A2($author$project$Natural$karatsuba, xsLE, ysLE));
+	});
+var $author$project$PeanoNat$mul = F2(
+	function (m, n) {
+		if (m.$ === 'Zero') {
+			return $author$project$PeanoNat$Zero;
+		} else {
+			var p = m.a;
+			return A2(
+				$author$project$PeanoNat$add,
+				n,
+				A2($author$project$PeanoNat$mul, p, n));
+		}
+	});
+var $author$project$Natural$sub = F2(
+	function (_v0, _v1) {
+		var xsLE = _v0.a;
+		var ysLE = _v1.a;
+		return $author$project$Natural$Natural(
+			A4($author$project$Natural$subHelper, xsLE, ysLE, 0, _List_Nil));
+	});
+var $author$project$PeanoNat$sub = F2(
+	function (m, n) {
+		sub:
+		while (true) {
+			var _v0 = _Utils_Tuple2(m, n);
+			if (_v0.b.$ === 'Zero') {
+				var _v1 = _v0.b;
+				return m;
+			} else {
+				if (_v0.a.$ === 'Zero') {
+					var _v2 = _v0.a;
+					return $author$project$PeanoNat$Zero;
+				} else {
+					var pm = _v0.a.a;
+					var pn = _v0.b.a;
+					var $temp$m = pm,
+						$temp$n = pn;
+					m = $temp$m;
+					n = $temp$n;
+					continue sub;
+				}
+			}
+		}
+	});
 var $elm_explorations$test$Test$Internal$blankDescriptionFailure = $elm_explorations$test$Test$Internal$failNow(
 	{
 		description: 'This test has a blank description. Let\'s give it a useful one!',
@@ -7730,7 +8203,64 @@ var $elm_explorations$test$Test$test = F2(
 						]);
 				}));
 	});
-var $author$project$Natural$toIntHelper = F2(
+var $author$project$Natural$three = $author$project$Natural$Natural(
+	_List_fromArray(
+		[3]));
+var $author$project$Natural$baseMask = $author$project$Natural$base - 1;
+var $author$project$Natural$padLeft = F3(
+	function (n, x, list) {
+		return _Utils_ap(
+			A2(
+				$elm$core$List$repeat,
+				n - $elm$core$List$length(list),
+				x),
+			list);
+	});
+var $author$project$Natural$toIntHelper = F3(
+	function (mask, x, digitsBE) {
+		toIntHelper:
+		while (true) {
+			if (!digitsBE.b) {
+				return x;
+			} else {
+				var digit = digitsBE.a;
+				var restDigitsBE = digitsBE.b;
+				var $temp$mask = $author$project$Natural$baseMask,
+					$temp$x = (x * $author$project$Natural$base) + (digit & mask),
+					$temp$digitsBE = restDigitsBE;
+				mask = $temp$mask;
+				x = $temp$x;
+				digitsBE = $temp$digitsBE;
+				continue toIntHelper;
+			}
+		}
+	});
+var $author$project$Natural$toInt = function (_v0) {
+	var digitsLE = _v0.a;
+	if (!digitsLE.b) {
+		return 0;
+	} else {
+		var _v2 = A2($author$project$Natural$iDivModBy, $author$project$Natural$numBits, $author$project$Natural$maxBits);
+		var q = _v2.a;
+		var r = _v2.b;
+		var _v3 = (r > 0) ? _Utils_Tuple2(
+			q + 1,
+			A2($elm$core$Basics$pow, 2, r) - 1) : _Utils_Tuple2(q, $author$project$Natural$baseMask);
+		var len = _v3.a;
+		var maskStart = _v3.b;
+		return A3(
+			$author$project$Natural$toIntHelper,
+			maskStart,
+			0,
+			A3(
+				$author$project$Natural$padLeft,
+				len,
+				0,
+				$elm$core$List$reverse(
+					A2($elm$core$List$take, len, digitsLE))));
+	}
+};
+var $author$project$PeanoNat$toIntHelper = F2(
 	function (n, acc) {
 		toIntHelper:
 		while (true) {
@@ -7746,9 +8276,280 @@ var $author$project$Natural$toIntHelper = F2(
 			}
 		}
 	});
-var $author$project$Natural$toInt = function (n) {
-	return A2($author$project$Natural$toIntHelper, n, 0);
+var $author$project$PeanoNat$toInt = function (n) {
+	return A2($author$project$PeanoNat$toIntHelper, n, 0);
 };
+var $author$project$Natural$two = $author$project$Natural$Natural(
+	_List_fromArray(
+		[2]));
+var $author$project$PeanoNat$zero = $author$project$PeanoNat$Zero;
+var $author$project$ExperimentTest$suite = A2(
+	$elm_explorations$test$Test$describe,
+	'Peano vs elm-natural',
+	_List_fromArray(
+		[
+			A2(
+			$elm_explorations$test$Test$describe,
+			'Both agree on arithmetic results',
+			_List_fromArray(
+				[
+					A2(
+					$elm_explorations$test$Test$test,
+					'add: 3 + 4 == 7',
+					function (_v0) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$toInt(
+								A2($author$project$PeanoNat$add, $author$project$PeanoNat$three, $author$project$PeanoNat$four)),
+							$author$project$Natural$toInt(
+								A2($author$project$Natural$add, $author$project$Natural$three, $author$project$Natural$four)));
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'mul: 3 * 3 == 9',
+					function (_v1) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$toInt(
+								A2($author$project$PeanoNat$mul, $author$project$PeanoNat$three, $author$project$PeanoNat$three)),
+							$author$project$Natural$toInt(
+								A2($author$project$Natural$mul, $author$project$Natural$three, $author$project$Natural$three)));
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'sub (saturating): 2 - 5 == 0',
+					function (_v2) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$toInt(
+								A2($author$project$PeanoNat$sub, $author$project$PeanoNat$two, $author$project$PeanoNat$five)),
+							$author$project$Natural$toInt(
+								A2($author$project$Natural$sub, $author$project$Natural$two, $author$project$Natural$five)));
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'compare: 2 vs 5 == LT',
+					function (_v3) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$compare, $author$project$PeanoNat$two, $author$project$PeanoNat$five),
+							A2($author$project$Natural$compare, $author$project$Natural$two, $author$project$Natural$five));
+					})
+				])),
+			A2(
+			$elm_explorations$test$Test$describe,
+			'Peano only: structural induction via pattern match',
+			_List_fromArray(
+				[
+					A2(
+					$elm_explorations$test$Test$test,
+					'count Add1 layers to measure a number',
+					function (_v4) {
+						var depth = function (n) {
+							if (n.$ === 'Zero') {
+								return 0;
+							} else {
+								var p = n.a;
+								return 1 + depth(p);
+							}
+						};
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							depth($author$project$PeanoNat$three),
+							3);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'predecessor by stripping one Add1',
+					function (_v6) {
+						var pred = function (n) {
+							if (n.$ === 'Zero') {
+								return $author$project$PeanoNat$Zero;
+							} else {
+								var p = n.a;
+								return p;
+							}
+						};
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$toInt(
+								pred($author$project$PeanoNat$five)),
+							4);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'custom isEven by mutual recursion on structure',
+					function (_v8) {
+						var myEven = function (n) {
+							if (n.$ === 'Zero') {
+								return true;
+							} else {
+								var p = n.a;
+								return myOdd(p);
+							}
+						};
+						var myOdd = function (n) {
+							if (n.$ === 'Zero') {
+								return false;
+							} else {
+								var p = n.a;
+								return myEven(p);
+							}
+						};
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							_List_fromArray(
+								[
+									myEven($author$project$PeanoNat$zero),
+									myEven($author$project$PeanoNat$two),
+									myEven($author$project$PeanoNat$four),
+									myOdd($author$project$PeanoNat$one),
+									myOdd($author$project$PeanoNat$three)
+								]),
+							_List_fromArray(
+								[true, true, true, true, true]));
+					})
+				])),
+			A2(
+			$elm_explorations$test$Test$describe,
+			'elm-natural only: larger numbers stay fast',
+			_List_fromArray(
+				[
+					A2(
+					$elm_explorations$test$Test$test,
+					'fromSafeInt 1000 round-trips through toInt',
+					function (_v11) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$Natural$toInt(
+								$author$project$Natural$fromSafeInt(1000)),
+							1000);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'add two 100s gives 200',
+					function (_v12) {
+						var n = $author$project$Natural$fromSafeInt(100);
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$Natural$toInt(
+								A2($author$project$Natural$add, n, n)),
+							200);
+					})
+				]))
+		]));
+var $author$project$PeanoNat$divModHelper = F2(
+	function (divisor, dividend) {
+		var _v0 = A2($author$project$PeanoNat$compare, dividend, divisor);
+		switch (_v0.$) {
+			case 'LT':
+				return _Utils_Tuple2($author$project$PeanoNat$Zero, dividend);
+			case 'EQ':
+				return _Utils_Tuple2($author$project$PeanoNat$one, $author$project$PeanoNat$Zero);
+			default:
+				var _v1 = A2(
+					$author$project$PeanoNat$divModHelper,
+					divisor,
+					A2($author$project$PeanoNat$sub, dividend, divisor));
+				var q = _v1.a;
+				var r = _v1.b;
+				return _Utils_Tuple2(
+					$author$project$PeanoNat$Add1(q),
+					r);
+		}
+	});
+var $author$project$PeanoNat$divModBy = F2(
+	function (divisor, dividend) {
+		if (divisor.$ === 'Zero') {
+			return $elm$core$Maybe$Nothing;
+		} else {
+			return $elm$core$Maybe$Just(
+				A2($author$project$PeanoNat$divModHelper, divisor, dividend));
+		}
+	});
+var $author$project$PeanoNat$six = $author$project$PeanoNat$Add1($author$project$PeanoNat$five);
+var $author$project$PeanoNat$seven = $author$project$PeanoNat$Add1($author$project$PeanoNat$six);
+var $author$project$PeanoNat$eight = $author$project$PeanoNat$Add1($author$project$PeanoNat$seven);
+var $author$project$PeanoNat$exp = F2(
+	function (b, n) {
+		if (n.$ === 'Zero') {
+			return $author$project$PeanoNat$one;
+		} else {
+			var p = n.a;
+			return A2(
+				$author$project$PeanoNat$mul,
+				b,
+				A2($author$project$PeanoNat$exp, b, p));
+		}
+	});
+var $author$project$PeanoNat$fromIntHelper = function (n) {
+	return (!n) ? $author$project$PeanoNat$Zero : $author$project$PeanoNat$Add1(
+		$author$project$PeanoNat$fromIntHelper(n - 1));
+};
+var $author$project$PeanoNat$fromInt = function (n) {
+	return (n < 0) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
+		$author$project$PeanoNat$fromIntHelper(n));
+};
+var $author$project$PeanoNat$fromSafeInt = A2(
+	$elm$core$Basics$composeR,
+	$author$project$PeanoNat$fromInt,
+	$elm$core$Maybe$withDefault($author$project$PeanoNat$zero));
+var $author$project$PeanoNat$isEven = function (n) {
+	if (n.$ === 'Zero') {
+		return true;
+	} else {
+		var p = n.a;
+		return $author$project$PeanoNat$isOdd(p);
+	}
+};
+var $author$project$PeanoNat$isOdd = function (n) {
+	if (n.$ === 'Zero') {
+		return false;
+	} else {
+		var p = n.a;
+		return $author$project$PeanoNat$isEven(p);
+	}
+};
+var $author$project$PeanoNat$isGreaterThan = F2(
+	function (b, a) {
+		return _Utils_eq(
+			A2($author$project$PeanoNat$compare, a, b),
+			$elm$core$Basics$GT);
+	});
+var $author$project$PeanoNat$isLessThan = F2(
+	function (b, a) {
+		return _Utils_eq(
+			A2($author$project$PeanoNat$compare, a, b),
+			$elm$core$Basics$LT);
+	});
+var $author$project$PeanoNat$isGreaterThanOrEqual = F2(
+	function (b, a) {
+		return !A2($author$project$PeanoNat$isLessThan, b, a);
+	});
+var $author$project$PeanoNat$isLessThanOrEqual = F2(
+	function (b, a) {
+		return !A2($author$project$PeanoNat$isGreaterThan, b, a);
+	});
+var $author$project$PeanoNat$isOne = function (n) {
+	return _Utils_eq(
+		n,
+		$author$project$PeanoNat$Add1($author$project$PeanoNat$Zero));
+};
+var $author$project$PeanoNat$isZero = function (n) {
+	return _Utils_eq(n, $author$project$PeanoNat$Zero);
+};
+var $author$project$PeanoNat$isPositive = A2($elm$core$Basics$composeL, $elm$core$Basics$not, $author$project$PeanoNat$isZero);
+var $author$project$PeanoNat$max = F2(
+	function (a, b) {
+		return A2($author$project$PeanoNat$isGreaterThanOrEqual, b, a) ? a : b;
+	});
+var $author$project$PeanoNat$min = F2(
+	function (a, b) {
+		return A2($author$project$PeanoNat$isLessThanOrEqual, b, a) ? a : b;
+	});
+var $author$project$PeanoNat$nine = $author$project$PeanoNat$Add1($author$project$PeanoNat$eight);
+var $author$project$PeanoNat$ten = $author$project$PeanoNat$Add1($author$project$PeanoNat$nine);
+var $author$project$PeanoNat$toString = A2($elm$core$Basics$composeR, $author$project$PeanoNat$toInt, $elm$core$String$fromInt);
 var $author$project$NaturalTest$suite = A2(
 	$elm_explorations$test$Test$describe,
 	'Natural (Peano)',
@@ -7765,7 +8566,7 @@ var $author$project$NaturalTest$suite = A2(
 					function (_v0) {
 						return A2(
 							$elm_explorations$test$Expect$equal,
-							$author$project$Natural$fromInt(-1),
+							$author$project$PeanoNat$fromInt(-1),
 							$elm$core$Maybe$Nothing);
 					}),
 					A2(
@@ -7774,8 +8575,8 @@ var $author$project$NaturalTest$suite = A2(
 					function (_v1) {
 						return A2(
 							$elm_explorations$test$Expect$equal,
-							$author$project$Natural$fromInt(0),
-							$elm$core$Maybe$Just($author$project$Natural$zero));
+							$author$project$PeanoNat$fromInt(0),
+							$elm$core$Maybe$Just($author$project$PeanoNat$zero));
 					}),
 					A2(
 					$elm_explorations$test$Test$test,
@@ -7783,7 +8584,7 @@ var $author$project$NaturalTest$suite = A2(
 					function (_v2) {
 						return A2(
 							$elm_explorations$test$Expect$equal,
-							$author$project$Natural$toInt($author$project$Natural$zero),
+							$author$project$PeanoNat$toInt($author$project$PeanoNat$zero),
 							0);
 					}),
 					A2(
@@ -7792,8 +8593,8 @@ var $author$project$NaturalTest$suite = A2(
 					function (_v3) {
 						return A2(
 							$elm_explorations$test$Expect$equal,
-							$author$project$Natural$five,
-							$author$project$Natural$fromSafeInt(5));
+							$author$project$PeanoNat$five,
+							$author$project$PeanoNat$fromSafeInt(5));
 					}),
 					A2(
 					$elm_explorations$test$Test$test,
@@ -7801,9 +8602,18 @@ var $author$project$NaturalTest$suite = A2(
 					function (_v4) {
 						return A2(
 							$elm_explorations$test$Expect$equal,
-							$author$project$Natural$toInt(
-								$author$project$Natural$fromSafeInt(3)),
+							$author$project$PeanoNat$toInt(
+								$author$project$PeanoNat$fromSafeInt(3)),
 							3);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'toInt ten == 10',
+					function (_v5) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$toInt($author$project$PeanoNat$ten),
+							10);
 					})
 				])),
 			A2(
@@ -7814,29 +8624,200 @@ var $author$project$NaturalTest$suite = A2(
 					A2(
 					$elm_explorations$test$Test$test,
 					'add zero three == three',
-					function (_v5) {
+					function (_v6) {
 						return A2(
 							$elm_explorations$test$Expect$equal,
-							A2($author$project$Natural$add, $author$project$Natural$zero, $author$project$Natural$three),
-							$author$project$Natural$three);
+							A2($author$project$PeanoNat$add, $author$project$PeanoNat$zero, $author$project$PeanoNat$three),
+							$author$project$PeanoNat$three);
 					}),
 					A2(
 					$elm_explorations$test$Test$test,
 					'add two three == five',
-					function (_v6) {
+					function (_v7) {
 						return A2(
 							$elm_explorations$test$Expect$equal,
-							A2($author$project$Natural$add, $author$project$Natural$two, $author$project$Natural$three),
-							$author$project$Natural$five);
+							A2($author$project$PeanoNat$add, $author$project$PeanoNat$two, $author$project$PeanoNat$three),
+							$author$project$PeanoNat$five);
 					}),
 					A2(
 					$elm_explorations$test$Test$test,
 					'add two three == add three two',
-					function (_v7) {
+					function (_v8) {
 						return A2(
 							$elm_explorations$test$Expect$equal,
-							A2($author$project$Natural$add, $author$project$Natural$two, $author$project$Natural$three),
-							A2($author$project$Natural$add, $author$project$Natural$three, $author$project$Natural$two));
+							A2($author$project$PeanoNat$add, $author$project$PeanoNat$two, $author$project$PeanoNat$three),
+							A2($author$project$PeanoNat$add, $author$project$PeanoNat$three, $author$project$PeanoNat$two));
+					})
+				])),
+			A2(
+			$elm_explorations$test$Test$describe,
+			'sub',
+			_List_fromArray(
+				[
+					A2(
+					$elm_explorations$test$Test$test,
+					'sub five two == three',
+					function (_v9) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$sub, $author$project$PeanoNat$five, $author$project$PeanoNat$two),
+							$author$project$PeanoNat$three);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'sub three three == zero',
+					function (_v10) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$sub, $author$project$PeanoNat$three, $author$project$PeanoNat$three),
+							$author$project$PeanoNat$zero);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'sub two five == zero (saturating)',
+					function (_v11) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$sub, $author$project$PeanoNat$two, $author$project$PeanoNat$five),
+							$author$project$PeanoNat$zero);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'sub zero three == zero (saturating)',
+					function (_v12) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$sub, $author$project$PeanoNat$zero, $author$project$PeanoNat$three),
+							$author$project$PeanoNat$zero);
+					})
+				])),
+			A2(
+			$elm_explorations$test$Test$describe,
+			'mul',
+			_List_fromArray(
+				[
+					A2(
+					$elm_explorations$test$Test$test,
+					'mul zero five == zero',
+					function (_v13) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$mul, $author$project$PeanoNat$zero, $author$project$PeanoNat$five),
+							$author$project$PeanoNat$zero);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'mul one five == five',
+					function (_v14) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$mul, $author$project$PeanoNat$one, $author$project$PeanoNat$five),
+							$author$project$PeanoNat$five);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'mul two three == six',
+					function (_v15) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$mul, $author$project$PeanoNat$two, $author$project$PeanoNat$three),
+							$author$project$PeanoNat$six);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'mul three three == nine',
+					function (_v16) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$mul, $author$project$PeanoNat$three, $author$project$PeanoNat$three),
+							$author$project$PeanoNat$nine);
+					})
+				])),
+			A2(
+			$elm_explorations$test$Test$describe,
+			'exp',
+			_List_fromArray(
+				[
+					A2(
+					$elm_explorations$test$Test$test,
+					'exp two zero == one',
+					function (_v17) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$exp, $author$project$PeanoNat$two, $author$project$PeanoNat$zero),
+							$author$project$PeanoNat$one);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'exp zero zero == one',
+					function (_v18) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$exp, $author$project$PeanoNat$zero, $author$project$PeanoNat$zero),
+							$author$project$PeanoNat$one);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'exp two three == eight',
+					function (_v19) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$exp, $author$project$PeanoNat$two, $author$project$PeanoNat$three),
+							$author$project$PeanoNat$eight);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'exp three two == nine',
+					function (_v20) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$exp, $author$project$PeanoNat$three, $author$project$PeanoNat$two),
+							$author$project$PeanoNat$nine);
+					})
+				])),
+			A2(
+			$elm_explorations$test$Test$describe,
+			'divModBy',
+			_List_fromArray(
+				[
+					A2(
+					$elm_explorations$test$Test$test,
+					'divModBy zero five == Nothing',
+					function (_v21) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$divModBy, $author$project$PeanoNat$zero, $author$project$PeanoNat$five),
+							$elm$core$Maybe$Nothing);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'divModBy two ten == Just (five, zero)',
+					function (_v22) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$divModBy, $author$project$PeanoNat$two, $author$project$PeanoNat$ten),
+							$elm$core$Maybe$Just(
+								_Utils_Tuple2($author$project$PeanoNat$five, $author$project$PeanoNat$zero)));
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'divModBy three ten == Just (three, one)',
+					function (_v23) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$divModBy, $author$project$PeanoNat$three, $author$project$PeanoNat$ten),
+							$elm$core$Maybe$Just(
+								_Utils_Tuple2($author$project$PeanoNat$three, $author$project$PeanoNat$one)));
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'divModBy five two == Just (zero, two)',
+					function (_v24) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$divModBy, $author$project$PeanoNat$five, $author$project$PeanoNat$two),
+							$elm$core$Maybe$Just(
+								_Utils_Tuple2($author$project$PeanoNat$zero, $author$project$PeanoNat$two)));
 					})
 				])),
 			A2(
@@ -7847,57 +8828,272 @@ var $author$project$NaturalTest$suite = A2(
 					A2(
 					$elm_explorations$test$Test$test,
 					'compare two five == LT',
-					function (_v8) {
+					function (_v25) {
 						return A2(
 							$elm_explorations$test$Expect$equal,
-							A2($author$project$Natural$compare, $author$project$Natural$two, $author$project$Natural$five),
+							A2($author$project$PeanoNat$compare, $author$project$PeanoNat$two, $author$project$PeanoNat$five),
 							$elm$core$Basics$LT);
 					}),
 					A2(
 					$elm_explorations$test$Test$test,
 					'compare five five == EQ',
-					function (_v9) {
+					function (_v26) {
 						return A2(
 							$elm_explorations$test$Expect$equal,
-							A2($author$project$Natural$compare, $author$project$Natural$five, $author$project$Natural$five),
+							A2($author$project$PeanoNat$compare, $author$project$PeanoNat$five, $author$project$PeanoNat$five),
 							$elm$core$Basics$EQ);
 					}),
 					A2(
 					$elm_explorations$test$Test$test,
 					'compare five two == GT',
-					function (_v10) {
+					function (_v27) {
 						return A2(
 							$elm_explorations$test$Expect$equal,
-							A2($author$project$Natural$compare, $author$project$Natural$five, $author$project$Natural$two),
+							A2($author$project$PeanoNat$compare, $author$project$PeanoNat$five, $author$project$PeanoNat$two),
 							$elm$core$Basics$GT);
+					})
+				])),
+			A2(
+			$elm_explorations$test$Test$describe,
+			'comparison predicates',
+			_List_fromArray(
+				[
+					A2(
+					$elm_explorations$test$Test$test,
+					'two isLessThan five',
+					function (_v28) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$isLessThan, $author$project$PeanoNat$five, $author$project$PeanoNat$two),
+							true);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'five isLessThan two == False',
+					function (_v29) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$isLessThan, $author$project$PeanoNat$two, $author$project$PeanoNat$five),
+							false);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'two isLessThanOrEqual two',
+					function (_v30) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$isLessThanOrEqual, $author$project$PeanoNat$two, $author$project$PeanoNat$two),
+							true);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'five isGreaterThan two',
+					function (_v31) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$isGreaterThan, $author$project$PeanoNat$two, $author$project$PeanoNat$five),
+							true);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'two isGreaterThanOrEqual two',
+					function (_v32) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$isGreaterThanOrEqual, $author$project$PeanoNat$two, $author$project$PeanoNat$two),
+							true);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'max two five == five',
+					function (_v33) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$max, $author$project$PeanoNat$two, $author$project$PeanoNat$five),
+							$author$project$PeanoNat$five);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'min two five == two',
+					function (_v34) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$PeanoNat$min, $author$project$PeanoNat$two, $author$project$PeanoNat$five),
+							$author$project$PeanoNat$two);
+					})
+				])),
+			A2(
+			$elm_explorations$test$Test$describe,
+			'predicates',
+			_List_fromArray(
+				[
+					A2(
+					$elm_explorations$test$Test$test,
+					'isZero zero == True',
+					function (_v35) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$isZero($author$project$PeanoNat$zero),
+							true);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'isZero one == False',
+					function (_v36) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$isZero($author$project$PeanoNat$one),
+							false);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'isOne one == True',
+					function (_v37) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$isOne($author$project$PeanoNat$one),
+							true);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'isOne two == False',
+					function (_v38) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$isOne($author$project$PeanoNat$two),
+							false);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'isPositive five == True',
+					function (_v39) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$isPositive($author$project$PeanoNat$five),
+							true);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'isPositive zero == False',
+					function (_v40) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$isPositive($author$project$PeanoNat$zero),
+							false);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'isEven zero == True',
+					function (_v41) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$isEven($author$project$PeanoNat$zero),
+							true);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'isEven two == True',
+					function (_v42) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$isEven($author$project$PeanoNat$two),
+							true);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'isEven three == False',
+					function (_v43) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$isEven($author$project$PeanoNat$three),
+							false);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'isOdd one == True',
+					function (_v44) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$isOdd($author$project$PeanoNat$one),
+							true);
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'isOdd two == False',
+					function (_v45) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$isOdd($author$project$PeanoNat$two),
+							false);
+					})
+				])),
+			A2(
+			$elm_explorations$test$Test$describe,
+			'toString',
+			_List_fromArray(
+				[
+					A2(
+					$elm_explorations$test$Test$test,
+					'toString zero == \"0\"',
+					function (_v46) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$toString($author$project$PeanoNat$zero),
+							'0');
+					}),
+					A2(
+					$elm_explorations$test$Test$test,
+					'toString ten == \"10\"',
+					function (_v47) {
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							$author$project$PeanoNat$toString($author$project$PeanoNat$ten),
+							'10');
 					})
 				]))
 		]));
 var $author$project$Test$Generated$Main$main = A2(
 	$author$project$Test$Runner$Node$run,
 	{
-		globs: _List_fromArray(
-			['tests/NaturalTest.elm']),
+		globs: _List_Nil,
 		paths: _List_fromArray(
-			['C:\\Users\\zzm\\Documents\\Summer2026\\Elm-NbE-Tutorial\\tests\\NaturalTest.elm']),
+			['C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\Example.elm', 'C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\ExperimentTest.elm', 'C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\NaturalTest.elm', 'C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\TestMain.elm']),
 		processes: 22,
-		report: $author$project$Test$Reporter$Reporter$ConsoleReport($author$project$Console$Text$Monochrome),
+		report: $author$project$Test$Reporter$Reporter$ConsoleReport($author$project$Console$Text$UseColor),
 		runs: 100,
-		seed: 261460878076222
+		seed: 174854158328153
 	},
 	_List_fromArray(
 		[
+			_Utils_Tuple2(
+			'Example',
+			_List_fromArray(
+				[
+					$author$project$Test$Runner$Node$check($author$project$Example$placeholder)
+				])),
+			_Utils_Tuple2(
+			'ExperimentTest',
+			_List_fromArray(
+				[
+					$author$project$Test$Runner$Node$check($author$project$ExperimentTest$suite)
+				])),
 			_Utils_Tuple2(
 			'NaturalTest',
 			_List_fromArray(
 				[
 					$author$project$Test$Runner$Node$check($author$project$NaturalTest$suite)
+				])),
+			_Utils_Tuple2(
+			'TestMain',
+			_List_fromArray(
+				[
+					$author$project$Test$Runner$Node$check($author$project$TestMain$noDefs)
 				]))
 		]));
 _Platform_export({'Test':{'Generated':{'Main':{'init':$author$project$Test$Generated$Main$main($elm$json$Json$Decode$int)(0)}}}});}(this));
 return this.Elm;
 })({});
-var pipeFilename = "\\\\.\\pipe\\elm_test-48888-1";
+var pipeFilename = "\\\\.\\pipe\\elm_test-50504-1";
 var net = require('net'),
   client = net.createConnection(pipeFilename);
 

@@ -1,5 +1,5 @@
-module Natural exposing
-    ( Natural
+module PeanoNat exposing
+    ( Natural(..)
     , zero, one, two, three, four, five, six, seven, eight, nine, ten
     , fromInt, fromSafeInt
     , compare, isLessThan, isLessThanOrEqual, isGreaterThan, isGreaterThanOrEqual, max, min
@@ -8,11 +8,15 @@ module Natural exposing
     , toInt, toString
     )
 
-{-| Natural numbers in Peano (unary) form.
+{-| Natural numbers in Peano (unary) form — kept for comparison experiment.
 
     type Natural = Zero | Add1 Natural
 
-Constructors are hidden; use the named constants or fromInt.
+These are NOT used in the main NbE project.
+The main project uses dwayne/elm-natural (binary big-integer, O(1) arithmetic).
+
+Constructors are intentionally exposed here so you can pattern-match and see
+the structure — that's the point of the comparison.
 -}
 
 
