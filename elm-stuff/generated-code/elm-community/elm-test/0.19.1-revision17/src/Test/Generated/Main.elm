@@ -1,6 +1,6 @@
 module Test.Generated.Main exposing (main)
 
-import TestMain
+import VectorTest
 
 import Test.Reporter.Reporter exposing (Report(..))
 import Console.Text exposing (UseColor(..))
@@ -12,17 +12,17 @@ main =
     Test.Runner.Node.run
         { runs = 100
         , report = ConsoleReport UseColor
-        , seed = 91780436811699
+        , seed = 296212711616802
         , processes = 24
         , globs =
-            [ "tests/TestMain.elm"
+            [ "tests/VectorTest.elm"
             ]
         , paths =
-            [ "C:\\Users\\dinas\\OneDrive\\Documents\\GitHub\\Elm-NbE-Tutorial\\tests\\TestMain.elm"
+            [ "C:\\Users\\dinas\\OneDrive\\Documents\\GitHub\\Elm-NbE-Tutorial\\tests\\VectorTest.elm"
             ]
         }
-        [ ( "TestMain"
-          , [ Test.Runner.Node.check TestMain.suite
+        [ ( "VectorTest"
+          , [ Test.Runner.Node.check VectorTest.suite
             ]
           )
         ]

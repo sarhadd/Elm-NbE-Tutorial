@@ -53,6 +53,9 @@ synth ctx expr =
         Nat _ ->
             Ok TNat
 
+        Flt _ ->
+            Ok TFlt
+
         -- Ann switches from checking → synthesis
         Ann e t ->
             case check ctx e t of

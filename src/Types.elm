@@ -32,6 +32,7 @@ type alias Message =
 
 type Ty
     = TNat        -- natural type
+    | TFlt        -- float type
     | TArr Ty Ty  -- function type (t₁ → t₂)
 
 
@@ -46,6 +47,7 @@ type Expr
     | App Expr Expr
     | Plus Expr Expr   -- replaces Rec
     | Nat Natural      -- replaces Zero/Add1
+    | Flt Float        -- floating-point literal
     | Ann Expr Ty
 
 
@@ -53,6 +55,7 @@ type Expr
 
 type Value
     = VNat Natural
+    | VFloat Float
     | VClosure (Env Value) Name Expr
     | VNeutral Ty Neutral
 

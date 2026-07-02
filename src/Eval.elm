@@ -3,6 +3,7 @@ module Eval exposing (..)
 import Dict
 import Types exposing (..)
 import Natural exposing (Natural)
+import Basics exposing (round)
 
 
 eval : Env Value -> Expr -> Value
@@ -23,6 +24,9 @@ eval env expr =
         Nat n ->
             VNat n
 
+        Flt f ->
+            VFloat f
+
         -- Rec t tgt base step ->
         --     doRec t (eval env tgt) (eval env base) (eval env step)
 
@@ -31,6 +35,8 @@ eval env expr =
             case (eval env l, eval env r) of    -- evaluate both sides to get their values
                 (VNat a, VNat b) ->             -- Once we get their values, we apply the 'add' opperation from Natural.elm
                     VNat (Natural.add a b)
+                (VFloat a, VFloat b) ->
+                    VFloat (a + b)
                 _ ->
                     Debug.todo  ("Internal error: Plus applied to non-natural")
 

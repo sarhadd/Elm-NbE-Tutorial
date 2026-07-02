@@ -15,6 +15,9 @@ readBackValue n ty v =
         ( TNat, VNat k ) ->
             Nat k
 
+        ( TFlt, VFloat f ) ->
+            Flt f
+
         ( TArr t1 t2, fun ) ->
             let
                 x =

@@ -7605,21 +7605,32 @@ var $author$project$Test$Runner$Node$run = F2(
 				});
 		}
 	});
-var $author$project$Types$App = F2(
+var $author$project$Vector$add = F2(
 	function (a, b) {
-		return {$: 'App', a: a, b: b};
+		return A3(
+			$elm$core$List$map2,
+			F2(
+				function (x, y) {
+					return x + y;
+				}),
+			a,
+			b);
 	});
-var $author$project$Types$Nat = function (a) {
-	return {$: 'Nat', a: a};
+var $elm$core$List$sum = function (numbers) {
+	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
 };
-var $author$project$Types$TArr = F2(
+var $author$project$Vector$dot = F2(
 	function (a, b) {
-		return {$: 'TArr', a: a, b: b};
+		return $elm$core$List$sum(
+			A3(
+				$elm$core$List$map2,
+				F2(
+					function (x, y) {
+						return x * y;
+					}),
+				a,
+				b));
 	});
-var $author$project$Types$TNat = {$: 'TNat'};
-var $author$project$Types$Var = function (a) {
-	return {$: 'Var', a: a};
-};
 var $elm_explorations$test$Test$Runner$Failure$Equality = F2(
 	function (a, b) {
 		return {$: 'Equality', a: a, b: b};
@@ -7664,502 +7675,32 @@ var $elm_explorations$test$Expect$equateWith = F4(
 		return usesFloats ? $elm_explorations$test$Expect$fail(floatError) : A5($elm_explorations$test$Expect$testWith, $elm_explorations$test$Test$Runner$Failure$Equality, reason, comparison, b, a);
 	});
 var $elm_explorations$test$Expect$equal = A2($elm_explorations$test$Expect$equateWith, 'Expect.equal', $elm$core$Basics$eq);
-var $author$project$Natural$Natural = function (a) {
-	return {$: 'Natural', a: a};
+var $author$project$Vector$roundFloat = function (f) {
+	return $elm$core$Basics$round(f);
 };
-var $author$project$Natural$numBits = 26;
-var $elm$core$Basics$pow = _Basics_pow;
-var $author$project$Natural$base = A2($elm$core$Basics$pow, 2, $author$project$Natural$numBits);
-var $elm$core$Basics$modBy = _Basics_modBy;
-var $author$project$Natural$quotientModBy = F2(
-	function (divisor, dividend) {
-		return _Utils_Tuple2(
-			$elm$core$Basics$floor(dividend / divisor),
-			A2($elm$core$Basics$modBy, divisor, dividend));
+var $author$project$Vector$scale = F2(
+	function (cnst, vec) {
+		return A2(
+			$elm$core$List$map,
+			function (x) {
+				return cnst * x;
+			},
+			vec);
 	});
-var $author$project$Natural$fromIntHelper = F2(
-	function (digitsBE, n) {
-		fromIntHelper:
-		while (true) {
-			if (!n) {
-				return $elm$core$List$reverse(digitsBE);
-			} else {
-				var _v0 = A2($author$project$Natural$quotientModBy, $author$project$Natural$base, n);
-				var q = _v0.a;
-				var r = _v0.b;
-				var $temp$digitsBE = A2($elm$core$List$cons, r, digitsBE),
-					$temp$n = q;
-				digitsBE = $temp$digitsBE;
-				n = $temp$n;
-				continue fromIntHelper;
-			}
-		}
-	});
-var $author$project$Natural$maxBits = 53;
-var $author$project$Natural$maxSafeInt = A2($elm$core$Basics$pow, 2, $author$project$Natural$maxBits) - 1;
-var $author$project$Natural$fromInt = function (x) {
-	return ((x >= 0) && (_Utils_cmp(x, $author$project$Natural$maxSafeInt) < 1)) ? $elm$core$Maybe$Just(
-		$author$project$Natural$Natural(
-			A2($author$project$Natural$fromIntHelper, _List_Nil, x))) : $elm$core$Maybe$Nothing;
-};
-var $author$project$Natural$zero = $author$project$Natural$Natural(_List_Nil);
-var $author$project$Natural$fromSafeInt = A2(
-	$elm$core$Basics$composeR,
-	$author$project$Natural$fromInt,
-	$elm$core$Maybe$withDefault($author$project$Natural$zero));
-var $author$project$Types$Normal = function (a) {
-	return {$: 'Normal', a: a};
-};
-var $elm$core$Dict$map = F2(
-	function (func, dict) {
-		if (dict.$ === 'RBEmpty_elm_builtin') {
-			return $elm$core$Dict$RBEmpty_elm_builtin;
-		} else {
-			var color = dict.a;
-			var key = dict.b;
-			var value = dict.c;
-			var left = dict.d;
-			var right = dict.e;
-			return A5(
-				$elm$core$Dict$RBNode_elm_builtin,
-				color,
-				key,
-				A2(func, key, value),
-				A2($elm$core$Dict$map, func, left),
-				A2($elm$core$Dict$map, func, right));
-		}
-	});
-var $author$project$Types$normalType = function (_v0) {
-	var r = _v0.a;
-	return r.normalType;
-};
-var $author$project$Defs$defsToContext = function (defs) {
-	return A2(
-		$elm$core$Dict$map,
-		F2(
-			function (_v0, normal) {
-				return $author$project$Types$normalType(normal);
-			}),
-		defs);
-};
-var $author$project$Types$normalValue = function (_v0) {
-	var r = _v0.a;
-	return r.normalValue;
-};
-var $author$project$Defs$defsToEnv = function (defs) {
-	return A2(
-		$elm$core$Dict$map,
-		F2(
-			function (_v0, normal) {
-				return $author$project$Types$normalValue(normal);
-			}),
-		defs);
-};
-var $author$project$Types$VClosure = F3(
-	function (a, b, c) {
-		return {$: 'VClosure', a: a, b: b, c: c};
-	});
-var $author$project$Types$VNat = function (a) {
-	return {$: 'VNat', a: a};
-};
-var $author$project$Natural$iDivModBy = F2(
-	function (divisor, dividend) {
-		return _Utils_Tuple2(
-			(dividend / divisor) | 0,
-			A2($elm$core$Basics$modBy, divisor, dividend));
-	});
-var $author$project$Natural$addHelper = F4(
-	function (xsLE, ysLE, carry, zsBE) {
-		addHelper:
-		while (true) {
-			var _v0 = _Utils_Tuple2(xsLE, ysLE);
-			if (!_v0.a.b) {
-				if (!_v0.b.b) {
-					var finalZsBE = (!carry) ? zsBE : A2($elm$core$List$cons, carry, zsBE);
-					return $elm$core$List$reverse(finalZsBE);
-				} else {
-					var _v3 = _v0.b;
-					var y = _v3.a;
-					var restYsLE = _v3.b;
-					var _v4 = A2($author$project$Natural$iDivModBy, $author$project$Natural$base, y + carry);
-					var newCarry = _v4.a;
-					var z = _v4.b;
-					var $temp$xsLE = _List_Nil,
-						$temp$ysLE = restYsLE,
-						$temp$carry = newCarry,
-						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
-					xsLE = $temp$xsLE;
-					ysLE = $temp$ysLE;
-					carry = $temp$carry;
-					zsBE = $temp$zsBE;
-					continue addHelper;
-				}
-			} else {
-				if (!_v0.b.b) {
-					var _v1 = _v0.a;
-					var x = _v1.a;
-					var restXsLE = _v1.b;
-					var _v2 = A2($author$project$Natural$iDivModBy, $author$project$Natural$base, x + carry);
-					var newCarry = _v2.a;
-					var z = _v2.b;
-					var $temp$xsLE = restXsLE,
-						$temp$ysLE = _List_Nil,
-						$temp$carry = newCarry,
-						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
-					xsLE = $temp$xsLE;
-					ysLE = $temp$ysLE;
-					carry = $temp$carry;
-					zsBE = $temp$zsBE;
-					continue addHelper;
-				} else {
-					var _v5 = _v0.a;
-					var x = _v5.a;
-					var restXsLE = _v5.b;
-					var _v6 = _v0.b;
-					var y = _v6.a;
-					var restYsLE = _v6.b;
-					var _v7 = A2($author$project$Natural$iDivModBy, $author$project$Natural$base, (x + y) + carry);
-					var newCarry = _v7.a;
-					var z = _v7.b;
-					var $temp$xsLE = restXsLE,
-						$temp$ysLE = restYsLE,
-						$temp$carry = newCarry,
-						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
-					xsLE = $temp$xsLE;
-					ysLE = $temp$ysLE;
-					carry = $temp$carry;
-					zsBE = $temp$zsBE;
-					continue addHelper;
-				}
-			}
-		}
-	});
-var $author$project$Natural$add = F2(
-	function (_v0, _v1) {
-		var xsLE = _v0.a;
-		var ysLE = _v1.a;
-		return $author$project$Natural$Natural(
-			A4($author$project$Natural$addHelper, xsLE, ysLE, 0, _List_Nil));
-	});
-var $author$project$Eval$extend = F3(
-	function (env, x, arg) {
-		return A3($elm$core$Dict$insert, x, arg, env);
-	});
-var $author$project$Eval$lookupVar = F2(
-	function (env, x) {
-		var _v0 = A2($elm$core$Dict$get, x, env);
-		if (_v0.$ === 'Just') {
-			var v = _v0.a;
-			return $elm$core$Result$Ok(v);
-		} else {
-			return $elm$core$Result$Err('Not found: Couldn\'t get var ' + (x + ' from evaluation env.'));
-		}
-	});
-var $author$project$Eval$doApply = F2(
-	function (rator, arg) {
-		if (rator.$ === 'VClosure') {
-			var env = rator.a;
-			var x = rator.b;
-			var body = rator.c;
-			return A2(
-				$author$project$Eval$eval,
-				A3($author$project$Eval$extend, env, x, arg),
-				body);
-		} else {
-			return _Debug_todo(
-				'Eval',
-				{
-					start: {line: 47, column: 13},
-					end: {line: 47, column: 23}
-				})('Error: applying non-function');
-		}
-	});
-var $author$project$Eval$eval = F2(
-	function (env, expr) {
-		_eval:
-		while (true) {
-			switch (expr.$) {
-				case 'Var':
-					var x = expr.a;
-					var _v1 = A2($author$project$Eval$lookupVar, env, x);
-					if (_v1.$ === 'Err') {
-						var msg = _v1.a;
-						return _Debug_todo(
-							'Eval',
-							{
-								start: {line: 13, column: 28},
-								end: {line: 13, column: 38}
-							})('Internal error: ' + msg);
-					} else {
-						var v = _v1.a;
-						return v;
-					}
-				case 'Lambda':
-					var x = expr.a;
-					var body = expr.b;
-					return A3($author$project$Types$VClosure, env, x, body);
-				case 'App':
-					var rator = expr.a;
-					var rand = expr.b;
-					return A2(
-						$author$project$Eval$doApply,
-						A2($author$project$Eval$eval, env, rator),
-						A2($author$project$Eval$eval, env, rand));
-				case 'Nat':
-					var n = expr.a;
-					return $author$project$Types$VNat(n);
-				case 'Plus':
-					var l = expr.a;
-					var r = expr.b;
-					var _v2 = _Utils_Tuple2(
-						A2($author$project$Eval$eval, env, l),
-						A2($author$project$Eval$eval, env, r));
-					if ((_v2.a.$ === 'VNat') && (_v2.b.$ === 'VNat')) {
-						var a = _v2.a.a;
-						var b = _v2.b.a;
-						return $author$project$Types$VNat(
-							A2($author$project$Natural$add, a, b));
-					} else {
-						return _Debug_todo(
-							'Eval',
-							{
-								start: {line: 35, column: 21},
-								end: {line: 35, column: 31}
-							})('Internal error: Plus applied to non-natural');
-					}
-				default:
-					var e = expr.a;
-					var t = expr.b;
-					var $temp$env = env,
-						$temp$expr = e;
-					env = $temp$env;
-					expr = $temp$expr;
-					continue _eval;
-			}
-		}
-	});
-var $author$project$Checking$lookupVar = F2(
-	function (ctx, x) {
-		var _v0 = A2($elm$core$Dict$get, x, ctx);
-		if (_v0.$ === 'Just') {
-			var ty = _v0.a;
-			return $elm$core$Result$Ok(ty);
-		} else {
-			return $elm$core$Result$Err('Unbound variable: ' + x);
-		}
-	});
-var $elm$core$Debug$toString = _Debug_toString;
-var $author$project$Checking$check = F3(
-	function (ctx, expr, expectedTy) {
-		check:
-		while (true) {
-			if (expr.$ === 'Lambda') {
-				var x = expr.a;
-				var body = expr.b;
-				if (expectedTy.$ === 'TArr') {
-					var argT = expectedTy.a;
-					var retT = expectedTy.b;
-					var ctxNew = A3($elm$core$Dict$insert, x, argT, ctx);
-					var $temp$ctx = ctxNew,
-						$temp$expr = body,
-						$temp$expectedTy = retT;
-					ctx = $temp$ctx;
-					expr = $temp$expr;
-					expectedTy = $temp$expectedTy;
-					continue check;
-				} else {
-					var other = expectedTy;
-					return $elm$core$Result$Err(
-						'Lambda requires a function type, but got ' + $elm$core$Debug$toString(other));
-				}
-			} else {
-				var _v11 = A2($author$project$Checking$synth, ctx, expr);
-				if (_v11.$ === 'Ok') {
-					var ty = _v11.a;
-					return _Utils_eq(ty, expectedTy) ? $elm$core$Result$Ok(_Utils_Tuple0) : $elm$core$Result$Err(
-						'Expected ' + ($elm$core$Debug$toString(expectedTy) + (' but got ' + $elm$core$Debug$toString(ty))));
-				} else {
-					var msg = _v11.a;
-					return $elm$core$Result$Err(msg);
-				}
-			}
-		}
-	});
-var $author$project$Checking$synth = F2(
-	function (ctx, expr) {
-		switch (expr.$) {
-			case 'Var':
-				var x = expr.a;
-				return A2($author$project$Checking$lookupVar, ctx, x);
-			case 'App':
-				var rator = expr.a;
-				var rand = expr.b;
-				var _v1 = A2($author$project$Checking$synth, ctx, rator);
-				if (_v1.$ === 'Ok') {
-					var ty = _v1.a;
-					if (ty.$ === 'TArr') {
-						var argT = ty.a;
-						var retT = ty.b;
-						var _v3 = A3($author$project$Checking$check, ctx, rand, argT);
-						if (_v3.$ === 'Ok') {
-							return $elm$core$Result$Ok(retT);
-						} else {
-							var msg = _v3.a;
-							return $elm$core$Result$Err(msg);
-						}
-					} else {
-						var other = ty;
-						return $elm$core$Result$Err(
-							'Not a function type: ' + $elm$core$Debug$toString(other));
-					}
-				} else {
-					var msg = _v1.a;
-					return $elm$core$Result$Err(msg);
-				}
-			case 'Plus':
-				var l = expr.a;
-				var r = expr.b;
-				var _v4 = A2($author$project$Checking$synth, ctx, l);
-				if (_v4.$ === 'Ok') {
-					if (_v4.a.$ === 'TNat') {
-						var _v5 = _v4.a;
-						var _v6 = A2($author$project$Checking$synth, ctx, r);
-						if (_v6.$ === 'Ok') {
-							if (_v6.a.$ === 'TNat') {
-								var _v7 = _v6.a;
-								return $elm$core$Result$Ok($author$project$Types$TNat);
-							} else {
-								var other = _v6.a;
-								return $elm$core$Result$Err(
-									'Plus expected Nat on the right, but got ' + $elm$core$Debug$toString(other));
-							}
-						} else {
-							var msg = _v6.a;
-							return $elm$core$Result$Err(msg);
-						}
-					} else {
-						var other = _v4.a;
-						return $elm$core$Result$Err(
-							'Plus expected Nat on the left, but got ' + $elm$core$Debug$toString(other));
-					}
-				} else {
-					var msg = _v4.a;
-					return $elm$core$Result$Err(msg);
-				}
-			case 'Nat':
-				return $elm$core$Result$Ok($author$project$Types$TNat);
-			case 'Ann':
-				var e = expr.a;
-				var t = expr.b;
-				var _v8 = A3($author$project$Checking$check, ctx, e, t);
-				if (_v8.$ === 'Ok') {
-					return $elm$core$Result$Ok(t);
-				} else {
-					var msg = _v8.a;
-					return $elm$core$Result$Err(msg);
-				}
-			default:
-				var other = expr;
-				return $elm$core$Result$Err(
-					'Can\'t find a type for ' + ($elm$core$Debug$toString(other) + '. Try adding a type annotation.'));
-		}
-	});
-var $author$project$Defs$normWithDefs = F2(
-	function (defs, e) {
-		var _v0 = A2(
-			$author$project$Checking$synth,
-			$author$project$Defs$defsToContext(defs),
-			e);
-		if (_v0.$ === 'Err') {
-			var msg = _v0.a;
-			return $elm$core$Result$Err(msg);
-		} else {
-			var t = _v0.a;
-			var v = A2(
-				$author$project$Eval$eval,
-				$author$project$Defs$defsToEnv(defs),
-				e);
-			return $elm$core$Result$Ok(
-				$author$project$Types$Normal(
-					{normalType: t, normalValue: v}));
-		}
-	});
-var $author$project$Defs$addDefs = F2(
-	function (defs, pairs) {
-		addDefs:
-		while (true) {
-			if (!pairs.b) {
-				return $elm$core$Result$Ok(defs);
-			} else {
-				var _v1 = pairs.a;
-				var x = _v1.a;
-				var e = _v1.b;
-				var more = pairs.b;
-				var _v2 = A2($author$project$Defs$normWithDefs, defs, e);
-				if (_v2.$ === 'Err') {
-					var msg = _v2.a;
-					return $elm$core$Result$Err(msg);
-				} else {
-					var norm = _v2.a;
-					var $temp$defs = A3($elm$core$Dict$insert, x, norm, defs),
-						$temp$pairs = more;
-					defs = $temp$defs;
-					pairs = $temp$pairs;
-					continue addDefs;
-				}
-			}
-		}
-	});
-var $author$project$Defs$noDefs = $elm$core$Dict$empty;
-var $author$project$Types$Ann = F2(
+var $author$project$Vector$sub = F2(
 	function (a, b) {
-		return {$: 'Ann', a: a, b: b};
+		return A3(
+			$elm$core$List$map2,
+			F2(
+				function (x, y) {
+					return x - y;
+				}),
+			a,
+			b);
 	});
-var $author$project$Types$Lambda = F2(
-	function (a, b) {
-		return {$: 'Lambda', a: a, b: b};
-	});
-var $author$project$Types$Plus = F2(
-	function (a, b) {
-		return {$: 'Plus', a: a, b: b};
-	});
-var $author$project$Defs$plusExpr = A2(
-	$author$project$Types$Ann,
-	A2(
-		$author$project$Types$Lambda,
-		'x',
-		A2(
-			$author$project$Types$Lambda,
-			'y',
-			A2(
-				$author$project$Types$Plus,
-				$author$project$Types$Var('x'),
-				$author$project$Types$Var('y')))),
-	A2(
-		$author$project$Types$TArr,
-		$author$project$Types$TNat,
-		A2($author$project$Types$TArr, $author$project$Types$TNat, $author$project$Types$TNat)));
-var $author$project$Defs$initDefs = function () {
-	var _v0 = A2(
-		$author$project$Defs$addDefs,
-		$author$project$Defs$noDefs,
-		_List_fromArray(
-			[
-				_Utils_Tuple2('+', $author$project$Defs$plusExpr)
-			]));
-	if (_v0.$ === 'Ok') {
-		var d = _v0.a;
-		return d;
-	} else {
-		var msg = _v0.a;
-		return _Debug_todo(
-			'Defs',
-			{
-				start: {line: 33, column: 13},
-				end: {line: 33, column: 23}
-			})('Failed to build test defs: ' + msg);
-	}
-}();
+var $author$project$Vector$sum = function (list) {
+	return $elm$core$List$sum(list);
+};
 var $elm_explorations$test$Test$Internal$blankDescriptionFailure = $elm_explorations$test$Test$Internal$failNow(
 	{
 		description: 'This test has a blank description. Let\'s give it a useful one!',
@@ -8179,206 +7720,115 @@ var $elm_explorations$test$Test$test = F2(
 						]);
 				}));
 	});
-var $author$project$Natural$baseMask = $author$project$Natural$base - 1;
-var $author$project$Natural$padLeft = F3(
-	function (n, x, list) {
-		return _Utils_ap(
+var $author$project$VectorTest$suite = A2(
+	$elm_explorations$test$Test$describe,
+	'basic vector operations',
+	_List_fromArray(
+		[
 			A2(
-				$elm$core$List$repeat,
-				n - $elm$core$List$length(list),
-				x),
-			list);
-	});
-var $author$project$Natural$toIntHelper = F3(
-	function (mask, x, digitsBE) {
-		toIntHelper:
-		while (true) {
-			if (!digitsBE.b) {
-				return x;
-			} else {
-				var digit = digitsBE.a;
-				var restDigitsBE = digitsBE.b;
-				var $temp$mask = $author$project$Natural$baseMask,
-					$temp$x = (x * $author$project$Natural$base) + (digit & mask),
-					$temp$digitsBE = restDigitsBE;
-				mask = $temp$mask;
-				x = $temp$x;
-				digitsBE = $temp$digitsBE;
-				continue toIntHelper;
-			}
-		}
-	});
-var $author$project$Natural$toInt = function (_v0) {
-	var digitsLE = _v0.a;
-	if (!digitsLE.b) {
-		return 0;
-	} else {
-		var _v2 = A2($author$project$Natural$iDivModBy, $author$project$Natural$numBits, $author$project$Natural$maxBits);
-		var q = _v2.a;
-		var r = _v2.b;
-		var _v3 = (r > 0) ? _Utils_Tuple2(
-			q + 1,
-			A2($elm$core$Basics$pow, 2, r) - 1) : _Utils_Tuple2(q, $author$project$Natural$baseMask);
-		var len = _v3.a;
-		var maskStart = _v3.b;
-		return A3(
-			$author$project$Natural$toIntHelper,
-			maskStart,
-			0,
-			A3(
-				$author$project$Natural$padLeft,
-				len,
-				0,
-				$elm$core$List$reverse(
-					A2($elm$core$List$take, len, digitsLE))));
-	}
-};
-var $author$project$TestMain$suite = function () {
-	var test3 = A2(
-		$author$project$Defs$normWithDefs,
-		$author$project$Defs$initDefs,
-		A2(
-			$author$project$Types$App,
+			$elm_explorations$test$Test$test,
+			'add two vectors elementwise',
+			function (_v0) {
+				return A2(
+					$elm_explorations$test$Expect$equal,
+					A2(
+						$author$project$Vector$add,
+						_List_fromArray(
+							[1, 2, 3]),
+						_List_fromArray(
+							[4, 5, 6])),
+					_List_fromArray(
+						[5, 7, 9]));
+			}),
 			A2(
-				$author$project$Types$App,
-				$author$project$Types$Var('+'),
-				$author$project$Types$Nat(
-					$author$project$Natural$fromSafeInt(3))),
-			$author$project$Types$Nat(
-				$author$project$Natural$fromSafeInt(2))));
-	var test2 = A2(
-		$author$project$Defs$normWithDefs,
-		$author$project$Defs$initDefs,
-		A2(
-			$author$project$Types$App,
-			$author$project$Types$Var('+'),
-			$author$project$Types$Nat(
-				$author$project$Natural$fromSafeInt(3))));
-	var test1 = A2(
-		$author$project$Defs$normWithDefs,
-		$author$project$Defs$initDefs,
-		$author$project$Types$Var('+'));
-	return A2(
-		$elm_explorations$test$Test$describe,
-		'normWithTestDefs',
-		_List_fromArray(
-			[
-				A2(
-				$elm_explorations$test$Test$test,
-				'Looking up + by itself stays as a lambda',
-				function (_v0) {
-					if (test1.$ === 'Ok') {
-						var normal = test1.a;
-						if (_Utils_eq(
-							$author$project$Types$normalType(normal),
-							A2(
-								$author$project$Types$TArr,
-								$author$project$Types$TNat,
-								A2($author$project$Types$TArr, $author$project$Types$TNat, $author$project$Types$TNat)))) {
-							var _v2 = $author$project$Types$normalValue(normal);
-							if (_v2.$ === 'VClosure') {
-								return $elm_explorations$test$Expect$pass;
-							} else {
-								return $elm_explorations$test$Expect$fail(
-									'Unexpected result: ' + $elm$core$Debug$toString(normal));
-							}
-						} else {
-							return $elm_explorations$test$Expect$fail(
-								'Unexpected type: ' + $elm$core$Debug$toString(
-									$author$project$Types$normalType(normal)));
-						}
-					} else {
-						var other = test1;
-						return $elm_explorations$test$Expect$fail(
-							'Unexpected result: ' + $elm$core$Debug$toString(other));
-					}
-				}),
-				A2(
-				$elm_explorations$test$Test$test,
-				'+ applied to three reduces to a partial lambda',
-				function (_v3) {
-					if (test2.$ === 'Ok') {
-						var normal = test2.a;
-						if (_Utils_eq(
-							$author$project$Types$normalType(normal),
-							A2($author$project$Types$TArr, $author$project$Types$TNat, $author$project$Types$TNat))) {
-							var _v5 = $author$project$Types$normalValue(normal);
-							if (_v5.$ === 'VClosure') {
-								return $elm_explorations$test$Expect$pass;
-							} else {
-								return $elm_explorations$test$Expect$fail(
-									'Unexpected result: ' + $elm$core$Debug$toString(normal));
-							}
-						} else {
-							return $elm_explorations$test$Expect$fail(
-								'Unexpected type: ' + $elm$core$Debug$toString(
-									$author$project$Types$normalType(normal)));
-						}
-					} else {
-						var other = test2;
-						return $elm_explorations$test$Expect$fail(
-							'Unexpected result: ' + $elm$core$Debug$toString(other));
-					}
-				}),
-				A2(
-				$elm_explorations$test$Test$test,
-				'+ applied to three and two fully reduces to five',
-				function (_v6) {
-					if (test3.$ === 'Ok') {
-						var normal = test3.a;
-						if (_Utils_eq(
-							$author$project$Types$normalType(normal),
-							$author$project$Types$TNat)) {
-							var _v8 = $author$project$Types$normalValue(normal);
-							if (_v8.$ === 'VNat') {
-								var n = _v8.a;
-								return A2(
-									$elm_explorations$test$Expect$equal,
-									$author$project$Natural$toInt(n),
-									5);
-							} else {
-								var other = _v8;
-								return $elm_explorations$test$Expect$fail(
-									'Unexpected result: ' + $elm$core$Debug$toString(other));
-							}
-						} else {
-							return $elm_explorations$test$Expect$fail(
-								'Unexpected type: ' + $elm$core$Debug$toString(
-									$author$project$Types$normalType(normal)));
-						}
-					} else {
-						var other = test3;
-						return $elm_explorations$test$Expect$fail(
-							'Unexpected result: ' + $elm$core$Debug$toString(other));
-					}
-				})
-			]));
-}();
+			$elm_explorations$test$Test$test,
+			'sub two vectors elementwise',
+			function (_v1) {
+				return A2(
+					$elm_explorations$test$Expect$equal,
+					A2(
+						$author$project$Vector$sub,
+						_List_fromArray(
+							[5, 7, 9]),
+						_List_fromArray(
+							[4, 5, 6])),
+					_List_fromArray(
+						[1, 2, 3]));
+			}),
+			A2(
+			$elm_explorations$test$Test$test,
+			'scale multiplies every element',
+			function (_v2) {
+				return A2(
+					$elm_explorations$test$Expect$equal,
+					A2(
+						$author$project$Vector$scale,
+						2,
+						_List_fromArray(
+							[1, 2, 3])),
+					_List_fromArray(
+						[2, 4, 6]));
+			}),
+			A2(
+			$elm_explorations$test$Test$test,
+			'dot computes the dot product',
+			function (_v3) {
+				return A2(
+					$elm_explorations$test$Expect$equal,
+					A2(
+						$author$project$Vector$dot,
+						_List_fromArray(
+							[1, 2, 3]),
+						_List_fromArray(
+							[4, 5, 6])),
+					32);
+			}),
+			A2(
+			$elm_explorations$test$Test$test,
+			'sum returns the total of a float list',
+			function (_v4) {
+				return A2(
+					$elm_explorations$test$Expect$equal,
+					$author$project$Vector$sum(
+						_List_fromArray(
+							[1.5, 2.5, 3.0])),
+					7.0);
+			}),
+			A2(
+			$elm_explorations$test$Test$test,
+			'roundFloat rounds a float to nearest int',
+			function (_v5) {
+				return A2(
+					$elm_explorations$test$Expect$equal,
+					$author$project$Vector$roundFloat(2.4),
+					2);
+			})
+		]));
 var $author$project$Test$Generated$Main$main = A2(
 	$author$project$Test$Runner$Node$run,
 	{
 		globs: _List_fromArray(
-			['tests/TestMain.elm']),
+			['tests/VectorTest.elm']),
 		paths: _List_fromArray(
-			['C:\\Users\\dinas\\OneDrive\\Documents\\GitHub\\Elm-NbE-Tutorial\\tests\\TestMain.elm']),
+			['C:\\Users\\dinas\\OneDrive\\Documents\\GitHub\\Elm-NbE-Tutorial\\tests\\VectorTest.elm']),
 		processes: 24,
 		report: $author$project$Test$Reporter$Reporter$ConsoleReport($author$project$Console$Text$UseColor),
 		runs: 100,
-		seed: 91780436811699
+		seed: 296212711616802
 	},
 	_List_fromArray(
 		[
 			_Utils_Tuple2(
-			'TestMain',
+			'VectorTest',
 			_List_fromArray(
 				[
-					$author$project$Test$Runner$Node$check($author$project$TestMain$suite)
+					$author$project$Test$Runner$Node$check($author$project$VectorTest$suite)
 				]))
 		]));
 _Platform_export({'Test':{'Generated':{'Main':{'init':$author$project$Test$Generated$Main$main($elm$json$Json$Decode$int)(0)}}}});}(this));
 return this.Elm;
 })({});
-var pipeFilename = "\\\\.\\pipe\\elm_test-38664-1";
+var pipeFilename = "\\\\.\\pipe\\elm_test-42068-1";
 var net = require('net'),
   client = net.createConnection(pipeFilename);
 
