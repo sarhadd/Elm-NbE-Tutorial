@@ -1,9 +1,2 @@
 # Elm build artifacts
 elm-stuff/
-
-# Node / test tooling artifacts
-node_modules/
-
-# Optional editor files
-.DS_Store
-*.log
