@@ -1,49 +1,82 @@
 module TestMain exposing (..)
 
-import Dict
+import Test exposing (..)
+import Expect
+import Debug
+
+-- Imports depend on what the original TestMain provided.
+import Defs exposing (..)
 import Types exposing (..)
-import Checking exposing (synth)
-import Eval exposing (eval)
+import Checking exposing (..)
+import Natural
 
-noDefs : Defs
-noDefs =
-    Dict.empty
-defsToContext : Defs -> Context
-defsToContext defs =
-    Dict.map (\_ normal -> normalType normal) defs
-defsToEnv : Defs -> Env Value
-defsToEnv defs =
-    Dict.map (\_ normal -> normalValue normal) defs
+suite : Test
+suite =
+    -- Build a small defs containing a primitive + for tests:
+    let
+        test1 : Result Message Normal
+        test1 =
+            normWithDefs initDefs (Var "+")
 
-normWithDefs : Defs -> Expr -> Result Message Normal
-normWithDefs defs e =
-    case synth (defsToContext defs) e of
-        Err msg ->
-            Err msg
+        test2 : Result Message Normal
+        test2 =
+            normWithDefs initDefs (App (Var "+") (Nat (Natural.fromSafeInt 3)))
 
-        Ok t ->
-            let
-                v =
-                    eval (defsToEnv defs) e
-            in
-            Ok (Normal { normalType = t, normalValue = v })
+        test3 : Result Message Normal
+        test3 =
+            normWithDefs initDefs (App (App (Var "+") (Nat (Natural.fromSafeInt 3))) (Nat (Natural.fromSafeInt 2)))
+    in
+    describe "normWithTestDefs"
+        [ test "Looking up + by itself stays as a lambda" <|
+                \_ ->
+                    case test1 of
+                        Ok normal ->
+                            if normalType normal == TArr TNat (TArr TNat TNat) then
+                                case normalValue normal of
+                                    VClosure _ _ _ ->
+                                        Expect.pass
+                                    _ ->
+                                        Expect.fail ("Unexpected result: " ++ Debug.toString normal)
+                            else
+                                Expect.fail ("Unexpected type: " ++ Debug.toString (normalType normal))
+                        other ->
+                            Expect.fail ("Unexpected result: " ++ Debug.toString other)
+                            
+            , test "+ applied to three reduces to a partial lambda" <|
+                \_ ->
+                    case test2 of
+                        Ok normal ->
+                            if normalType normal == TArr TNat TNat then
+                                case normalValue normal of
+                                    VClosure _ _ _ ->
+                                        Expect.pass
+                                    _ ->
+                                        Expect.fail ("Unexpected result: " ++ Debug.toString normal)
+                            else
+                                Expect.fail ("Unexpected type: " ++ Debug.toString (normalType normal))
+
+                        other ->
+                            Expect.fail ("Unexpected result: " ++ Debug.toString other)
+
+            -- fuzz runs the test 100 times with randomly-generated inputs!
+            -- , fuzz string  " ... " <|
+            , test "+ applied to three and two fully reduces to five" <|
+                \_ ->
+                    case test3 of
+                        Ok normal ->
+                            if normalType normal == TNat then
+                                case normalValue normal of
+                                    VNat n ->
+                                        Expect.equal (Natural.toInt n) 5
+                                    other ->
+                                        Expect.fail ("Unexpected result: " ++ Debug.toString other)
+                            else
+                                Expect.fail ("Unexpected type: " ++ Debug.toString (normalType normal))
+
+                        other ->
+                            Expect.fail ("Unexpected result: " ++ Debug.toString other)
+ 
+        ]
 
 
-addDefs : Defs -> List ( Name, Expr ) -> Result Message Defs
-addDefs defs pairs =
-    case pairs of
-        [] ->
-            Ok defs
-
-        ( x, e ) :: more ->
-            case normWithDefs defs e of
-                Err msg ->
-                    Err msg
-
-                Ok norm ->
-                    addDefs (Dict.insert x norm defs) more
-
-
-definedNames : Defs -> List Name
-definedNames defs =
-    Dict.keys defs
+-- TODO: Add more tests for other Expr types.

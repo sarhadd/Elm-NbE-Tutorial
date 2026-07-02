@@ -1,8 +1,5 @@
 module Test.Generated.Main exposing (main)
 
-import Example
-import ExperimentTest
-import NaturalTest
 import TestMain
 
 import Test.Reporter.Reporter exposing (Report(..))
@@ -14,32 +11,18 @@ main : Test.Runner.Node.TestProgram
 main =
     Test.Runner.Node.run
         { runs = 100
-        , report = ConsoleReport Monochrome
-        , seed = 337779823637829
-        , processes = 22
+        , report = ConsoleReport UseColor
+        , seed = 91780436811699
+        , processes = 24
         , globs =
-            []
+            [ "tests/TestMain.elm"
+            ]
         , paths =
-            [ "C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\Example.elm"
-            , "C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\ExperimentTest.elm"
-            , "C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\NaturalTest.elm"
-            , "C:\\Users\\zzm\\Documents\\stabl\\Elm-NbE-Tutorial\\tests\\TestMain.elm"
+            [ "C:\\Users\\dinas\\OneDrive\\Documents\\GitHub\\Elm-NbE-Tutorial\\tests\\TestMain.elm"
             ]
         }
-        [ ( "Example"
-          , [ Test.Runner.Node.check Example.placeholder
-            ]
-          )
-        , ( "ExperimentTest"
-          , [ Test.Runner.Node.check ExperimentTest.suite
-            ]
-          )
-        , ( "NaturalTest"
-          , [ Test.Runner.Node.check NaturalTest.suite
-            ]
-          )
-        , ( "TestMain"
-          , [ Test.Runner.Node.check TestMain.noDefs
+        [ ( "TestMain"
+          , [ Test.Runner.Node.check TestMain.suite
             ]
           )
         ]
