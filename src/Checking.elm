@@ -45,8 +45,16 @@ synth ctx expr =
                             Err ("Plus expected Nat on the right, but got " ++ Debug.toString other)
                         Err msg ->
                             Err msg
+                Ok TFlt ->
+                    case synth ctx r of
+                        Ok TFlt ->
+                            Ok TFlt
+                        Ok other ->
+                            Err ("Plus expected Flt on the right, but got " ++ Debug.toString other)
+                        Err msg ->
+                            Err msg
                 Ok other ->
-                    Err ("Plus expected Nat on the left, but got " ++ Debug.toString other)
+                    Err ("Plus expected Nat or Flt on the left, but got " ++ Debug.toString other)
                 Err msg ->
                     Err msg
 
