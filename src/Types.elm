@@ -31,10 +31,14 @@ type alias Message =
 
 
 type Ty
-    = TNat        -- natural type
-    | TFlt        -- float type
-    | TArr Ty Ty  -- function type (t₁ → t₂)
+    = TNat           -- natural type
+    | TFlt           -- float type
+    | TVec Expr Ty   -- vector type (Expr has to be Nat)
+    | TArr Ty Ty     -- function type (t₁ → t₂)
 
+-- Note: Type of Vec.map: TArr (TArr TFlt TNat) -> TVec n TFlt -> TVec n TNat 
+--       We can't express this with the four constructors we have and would need a constructor for the type index
+--       First n is binding, next n is subsitution
 
 -- ── Expression syntax ─────────────────────────────────────────────────────
 -- Defined here to avoid a circular import: Value references Expr (closures),
