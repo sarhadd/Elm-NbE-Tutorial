@@ -1,8 +1,9 @@
 module ExperimentTest exposing (..)
 
-{-| Peano vs elm-natural comparison experiment.
+{-| Peano vs Nat comparison experiment.
 
-Two implementations of the same mathematical object (ℕ):
+Two implementations of the same mathematical object (ℕ), both local to this
+project (no external elm-natural dependency in the main line anymore):
 
   PeanoNat  ─  type Natural = Zero | Add1 Natural
     Unary representation. Ten is literally Add1(Add1(Add1(...))).
@@ -11,57 +12,71 @@ Two implementations of the same mathematical object (ℕ):
     - O(n) space. The number 1000 allocates 1000 constructors.
     - O(n) add, O(n²) mul. Large numbers hang or OOM.
 
-  Natural (elm-natural / dwayne)  ─  base-2^26 polynomial
+  Nat (src/Nat.elm)  ─  base-2^26 polynomial, elm-natural's representational idea
     [c₀, c₁, ...] where value = Σ cᵢ · 2^(26i).
-    + O(log n) space, fast arithmetic.
+    + O(log n) space, fast arithmetic (schoolbook mul, recursive-doubling division —
+      simpler than elm-natural's Karatsuba/Knuth, same digit-count win over Peano).
     + Safe for large literals in the term language.
     - Opaque type: no pattern matching, cannot write structural induction in Elm.
 
-For the NbE project: Nat literals in expressions (e.g. the term `1000`) use
-elm-natural so the interpreter doesn't choke. PeanoNat lives here for pedagogy.
+For the NbE project: Nat literals in expressions (e.g. the term `1000`) use Nat
+so the interpreter doesn't choke. PeanoNat lives here for pedagogy and comparison
+only — everything else in this project (Types.elm, Eval.elm, ...) uses Nat.
 -}
 
 import Expect
 import Test exposing (..)
 import PeanoNat
-import Natural
+import Nat
 
 
 suite : Test
 suite =
-    describe "Peano vs elm-natural"
+    describe "Peano vs Nat"
         [ describe "Both agree on arithmetic results"
             [ test "add: 3 + 4 == 7" <|
                 \_ ->
                     Expect.equal
                         (PeanoNat.toInt (PeanoNat.add PeanoNat.three PeanoNat.four))
-                        (Natural.toInt  (Natural.add  Natural.three  Natural.four))
+                        (Nat.toInt      (Nat.add      Nat.three      Nat.four))
 
             , test "mul: 3 * 3 == 9" <|
                 \_ ->
                     Expect.equal
                         (PeanoNat.toInt (PeanoNat.mul PeanoNat.three PeanoNat.three))
-                        (Natural.toInt  (Natural.mul  Natural.three  Natural.three))
+                        (Nat.toInt      (Nat.mul      Nat.three      Nat.three))
 
             , test "sub (saturating): 2 - 5 == 0" <|
                 \_ ->
                     Expect.equal
                         (PeanoNat.toInt (PeanoNat.sub PeanoNat.two PeanoNat.five))
-                        (Natural.toInt  (Natural.sub  Natural.two  Natural.five))
+                        (Nat.toInt      (Nat.sub      Nat.two      Nat.five))
 
             , test "compare: 2 vs 5 == LT" <|
                 \_ ->
                     Expect.equal
                         (PeanoNat.compare PeanoNat.two PeanoNat.five)
-                        (Natural.compare  Natural.two  Natural.five)
+                        (Nat.compare      Nat.two      Nat.five)
+
+            , test "divModBy: 10 / 3 == (3, 1)" <|
+                \_ ->
+                    Expect.equal
+                        (PeanoNat.divModBy PeanoNat.three PeanoNat.ten |> Maybe.map (Tuple.mapBoth PeanoNat.toInt PeanoNat.toInt))
+                        (Nat.divModBy      Nat.three      Nat.ten      |> Maybe.map (Tuple.mapBoth Nat.toInt Nat.toInt))
+
+            , test "exp: 2 ^ 10 == 1024" <|
+                \_ ->
+                    Expect.equal
+                        (PeanoNat.toInt (PeanoNat.exp PeanoNat.two (PeanoNat.fromSafeInt 10)))
+                        (Nat.toInt      (Nat.exp      Nat.two      (Nat.fromSafeInt 10)))
             ]
 
 
-        , describe "elm-natural only: larger numbers stay fast"
+        , describe "Nat only: larger numbers stay fast"
             [ test "fromSafeInt 1000 round-trips through toInt" <|
                 \_ ->
                     Expect.equal
-                        (Natural.toInt (Natural.fromSafeInt 1000))
+                        (Nat.toInt (Nat.fromSafeInt 1000))
                         1000
                 -- PeanoNat.fromSafeInt 1000 allocates 1000 constructors
                 -- and PeanoNat.toInt walks all of them. Fine for tests,
@@ -69,17 +84,25 @@ suite =
 
             , test "add two 100s gives 200" <|
                 \_ ->
-                    let n = Natural.fromSafeInt 100
+                    let n = Nat.fromSafeInt 100
                     in
                     Expect.equal
-                        (Natural.toInt (Natural.add n n))
+                        (Nat.toInt (Nat.add n n))
                         200
+
+            , test "mul: 999 * 999 == 998001 (schoolbook mul keeps up)" <|
+                \_ ->
+                    let n = Nat.fromSafeInt 999
+                    in
+                    Expect.equal
+                        (Nat.toInt (Nat.mul n n))
+                        998001
             ]
         ]
 
 
         -- , describe "Peano only: structural induction via pattern match"
-        --     -- elm-natural is opaque — you cannot write these directly.
+        --     -- Nat is opaque — you cannot write these directly.
         --     [ test "count Add1 layers to measure a number" <|
         --         \_ ->
         --             let

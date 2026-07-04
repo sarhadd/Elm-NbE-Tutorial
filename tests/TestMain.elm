@@ -8,7 +8,7 @@ import Debug
 import Defs exposing (..)
 import Types exposing (..)
 import Checking exposing (..)
-import Natural
+import Nat as Natural
 
 suite : Test
 suite =
