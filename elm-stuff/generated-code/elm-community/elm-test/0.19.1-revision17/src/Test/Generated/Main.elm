@@ -15,7 +15,7 @@ main =
     Test.Runner.Node.run
         { runs = 100
         , report = ConsoleReport Monochrome
-        , seed = 71800747157698
+        , seed = 165158144764754
         , processes = 22
         , globs =
             []
@@ -36,6 +36,7 @@ main =
           )
         , ( "TestMain"
           , [ Test.Runner.Node.check TestMain.suite
+            , Test.Runner.Node.check TestMain.vecSuite
             ]
           )
         , ( "VectorTest"

@@ -9000,6 +9000,58 @@ var $author$project$Types$VFloat = function (a) {
 var $author$project$Types$VNat = function (a) {
 	return {$: 'VNat', a: a};
 };
+var $author$project$Types$VVec = function (a) {
+	return {$: 'VVec', a: a};
+};
+var $author$project$Eval$addValue = F2(
+	function (a, b) {
+		var _v0 = _Utils_Tuple2(a, b);
+		_v0$2:
+		while (true) {
+			switch (_v0.a.$) {
+				case 'VNat':
+					if (_v0.b.$ === 'VNat') {
+						var x = _v0.a.a;
+						var y = _v0.b.a;
+						return $author$project$Types$VNat(
+							A2($author$project$Nat$add, x, y));
+					} else {
+						break _v0$2;
+					}
+				case 'VFloat':
+					if (_v0.b.$ === 'VFloat') {
+						var x = _v0.a.a;
+						var y = _v0.b.a;
+						return $author$project$Types$VFloat(x + y);
+					} else {
+						break _v0$2;
+					}
+				default:
+					break _v0$2;
+			}
+		}
+		return _Debug_todo(
+			'Eval',
+			{
+				start: {line: 81, column: 13},
+				end: {line: 81, column: 23}
+			})('Internal error: addValue applied to mismatched or non-numeric values');
+	});
+var $elm$core$List$sum = function (numbers) {
+	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
+};
+var $author$project$Vector$dot = F2(
+	function (a, b) {
+		return $elm$core$List$sum(
+			A3(
+				$elm$core$List$map2,
+				F2(
+					function (x, y) {
+						return x * y;
+					}),
+				a,
+				b));
+	});
 var $author$project$Eval$extend = F3(
 	function (env, x, arg) {
 		return A3($elm$core$Dict$insert, x, arg, env);
@@ -9014,6 +9066,19 @@ var $author$project$Eval$lookupVar = F2(
 			return $elm$core$Result$Err('Not found: Couldn\'t get var ' + (x + ' from evaluation env.'));
 		}
 	});
+var $author$project$Eval$toFloatValue = function (v) {
+	if (v.$ === 'VFloat') {
+		var f = v.a;
+		return f;
+	} else {
+		return _Debug_todo(
+			'Eval',
+			{
+				start: {line: 90, column: 13},
+				end: {line: 90, column: 23}
+			})('Internal error: expected a float value');
+	}
+};
 var $author$project$Eval$doApply = F2(
 	function (rator, arg) {
 		if (rator.$ === 'VClosure') {
@@ -9028,8 +9093,8 @@ var $author$project$Eval$doApply = F2(
 			return _Debug_todo(
 				'Eval',
 				{
-					start: {line: 53, column: 13},
-					end: {line: 53, column: 23}
+					start: {line: 99, column: 13},
+					end: {line: 99, column: 23}
 				})('Error: applying non-function');
 		}
 	});
@@ -9046,8 +9111,8 @@ var $author$project$Eval$eval = F2(
 						return _Debug_todo(
 							'Eval',
 							{
-								start: {line: 14, column: 28},
-								end: {line: 14, column: 38}
+								start: {line: 15, column: 28},
+								end: {line: 15, column: 38}
 							})('Internal error: ' + msg);
 					} else {
 						var v = _v1.a;
@@ -9103,10 +9168,10 @@ var $author$project$Eval$eval = F2(
 					return _Debug_todo(
 						'Eval',
 						{
-							start: {line: 41, column: 21},
-							end: {line: 41, column: 31}
+							start: {line: 42, column: 21},
+							end: {line: 42, column: 31}
 						})('Internal error: Plus applied to non-natural');
-				default:
+				case 'Ann':
 					var e = expr.a;
 					var t = expr.b;
 					var $temp$env = env,
@@ -9114,10 +9179,87 @@ var $author$project$Eval$eval = F2(
 					env = $temp$env;
 					expr = $temp$expr;
 					continue _eval;
+				case 'VecLit':
+					var elems = expr.a;
+					return $author$project$Types$VVec(
+						A2(
+							$elm$core$List$map,
+							$author$project$Eval$eval(env),
+							elems));
+				case 'VecAdd':
+					var l = expr.a;
+					var r = expr.b;
+					var _v3 = _Utils_Tuple2(
+						A2($author$project$Eval$eval, env, l),
+						A2($author$project$Eval$eval, env, r));
+					if ((_v3.a.$ === 'VVec') && (_v3.b.$ === 'VVec')) {
+						var ls = _v3.a.a;
+						var rs = _v3.b.a;
+						return $author$project$Types$VVec(
+							A3($elm$core$List$map2, $author$project$Eval$addValue, ls, rs));
+					} else {
+						return _Debug_todo(
+							'Eval',
+							{
+								start: {line: 55, column: 21},
+								end: {line: 55, column: 31}
+							})('Internal error: VecAdd applied to non-vector');
+					}
+				case 'Dot':
+					var l = expr.a;
+					var r = expr.b;
+					var _v4 = _Utils_Tuple2(
+						A2($author$project$Eval$eval, env, l),
+						A2($author$project$Eval$eval, env, r));
+					if ((_v4.a.$ === 'VVec') && (_v4.b.$ === 'VVec')) {
+						var ls = _v4.a.a;
+						var rs = _v4.b.a;
+						return $author$project$Types$VFloat(
+							A2(
+								$author$project$Vector$dot,
+								A2($elm$core$List$map, $author$project$Eval$toFloatValue, ls),
+								A2($elm$core$List$map, $author$project$Eval$toFloatValue, rs)));
+					} else {
+						return _Debug_todo(
+							'Eval',
+							{
+								start: {line: 62, column: 21},
+								end: {line: 62, column: 31}
+							})('Internal error: Dot applied to non-vector');
+					}
+				default:
+					var s = expr.a;
+					var v = expr.b;
+					var _v5 = _Utils_Tuple2(
+						A2($author$project$Eval$eval, env, s),
+						A2($author$project$Eval$eval, env, v));
+					if ((_v5.a.$ === 'VFloat') && (_v5.b.$ === 'VVec')) {
+						var c = _v5.a.a;
+						var vs = _v5.b.a;
+						return $author$project$Types$VVec(
+							A2(
+								$elm$core$List$map,
+								function (x) {
+									return $author$project$Types$VFloat(
+										c * $author$project$Eval$toFloatValue(x));
+								},
+								vs));
+					} else {
+						return _Debug_todo(
+							'Eval',
+							{
+								start: {line: 69, column: 21},
+								end: {line: 69, column: 31}
+							})('Internal error: Scale applied to non-scalar/non-vector');
+					}
 			}
 		}
 	});
 var $author$project$Types$TFlt = {$: 'TFlt'};
+var $author$project$Types$TVec = F2(
+	function (a, b) {
+		return {$: 'TVec', a: a, b: b};
+	});
 var $author$project$Checking$lookupVar = F2(
 	function (ctx, x) {
 		var _v0 = A2($elm$core$Dict$get, x, ctx);
@@ -9153,13 +9295,38 @@ var $author$project$Checking$check = F3(
 						'Lambda requires a function type, but got ' + $elm$core$Debug$toString(other));
 				}
 			} else {
-				var _v14 = A2($author$project$Checking$synth, ctx, expr);
-				if (_v14.$ === 'Ok') {
-					var ty = _v14.a;
+				var _v30 = A2($author$project$Checking$synth, ctx, expr);
+				if (_v30.$ === 'Ok') {
+					var ty = _v30.a;
 					return _Utils_eq(ty, expectedTy) ? $elm$core$Result$Ok(_Utils_Tuple0) : $elm$core$Result$Err(
 						'Expected ' + ($elm$core$Debug$toString(expectedTy) + (' but got ' + $elm$core$Debug$toString(ty))));
 				} else {
-					var msg = _v14.a;
+					var msg = _v30.a;
+					return $elm$core$Result$Err(msg);
+				}
+			}
+		}
+	});
+var $author$project$Checking$checkAllSameType = F3(
+	function (ctx, exprs, ty) {
+		checkAllSameType:
+		while (true) {
+			if (!exprs.b) {
+				return $elm$core$Result$Ok(_Utils_Tuple0);
+			} else {
+				var e = exprs.a;
+				var rest = exprs.b;
+				var _v27 = A3($author$project$Checking$check, ctx, e, ty);
+				if (_v27.$ === 'Ok') {
+					var $temp$ctx = ctx,
+						$temp$exprs = rest,
+						$temp$ty = ty;
+					ctx = $temp$ctx;
+					exprs = $temp$exprs;
+					ty = $temp$ty;
+					continue checkAllSameType;
+				} else {
+					var msg = _v27.a;
 					return $elm$core$Result$Err(msg);
 				}
 			}
@@ -9256,6 +9423,120 @@ var $author$project$Checking$synth = F2(
 				} else {
 					var msg = _v11.a;
 					return $elm$core$Result$Err(msg);
+				}
+			case 'VecLit':
+				if (!expr.a.b) {
+					return $elm$core$Result$Err('Can\'t synthesize a type for an empty vector; add a type annotation.');
+				} else {
+					var _v12 = expr.a;
+					var first = _v12.a;
+					var rest = _v12.b;
+					var _v13 = A2($author$project$Checking$synth, ctx, first);
+					if (_v13.$ === 'Ok') {
+						var elemTy = _v13.a;
+						var _v14 = A3($author$project$Checking$checkAllSameType, ctx, rest, elemTy);
+						if (_v14.$ === 'Ok') {
+							return $elm$core$Result$Ok(
+								A2(
+									$author$project$Types$TVec,
+									$author$project$Types$Nat(
+										$author$project$Nat$fromSafeInt(
+											$elm$core$List$length(
+												A2($elm$core$List$cons, first, rest)))),
+									elemTy));
+						} else {
+							var msg = _v14.a;
+							return $elm$core$Result$Err(msg);
+						}
+					} else {
+						var msg = _v13.a;
+						return $elm$core$Result$Err(msg);
+					}
+				}
+			case 'VecAdd':
+				var l = expr.a;
+				var r = expr.b;
+				var _v15 = A2($author$project$Checking$synth, ctx, l);
+				if (_v15.$ === 'Ok') {
+					if (_v15.a.$ === 'TVec') {
+						var _v16 = _v15.a;
+						var n = _v16.a;
+						var elemTy = _v16.b;
+						var _v17 = A3(
+							$author$project$Checking$check,
+							ctx,
+							r,
+							A2($author$project$Types$TVec, n, elemTy));
+						if (_v17.$ === 'Ok') {
+							return $elm$core$Result$Ok(
+								A2($author$project$Types$TVec, n, elemTy));
+						} else {
+							var msg = _v17.a;
+							return $elm$core$Result$Err(msg);
+						}
+					} else {
+						var other = _v15.a;
+						return $elm$core$Result$Err(
+							'VecAdd expected a vector on the left, but got ' + $elm$core$Debug$toString(other));
+					}
+				} else {
+					var msg = _v15.a;
+					return $elm$core$Result$Err(msg);
+				}
+			case 'Dot':
+				var l = expr.a;
+				var r = expr.b;
+				var _v18 = A2($author$project$Checking$synth, ctx, l);
+				if (_v18.$ === 'Ok') {
+					if ((_v18.a.$ === 'TVec') && (_v18.a.b.$ === 'TFlt')) {
+						var _v19 = _v18.a;
+						var n = _v19.a;
+						var _v20 = _v19.b;
+						var _v21 = A3(
+							$author$project$Checking$check,
+							ctx,
+							r,
+							A2($author$project$Types$TVec, n, $author$project$Types$TFlt));
+						if (_v21.$ === 'Ok') {
+							return $elm$core$Result$Ok($author$project$Types$TFlt);
+						} else {
+							var msg = _v21.a;
+							return $elm$core$Result$Err(msg);
+						}
+					} else {
+						var other = _v18.a;
+						return $elm$core$Result$Err(
+							'Dot expected a Vec Flt on the left, but got ' + $elm$core$Debug$toString(other));
+					}
+				} else {
+					var msg = _v18.a;
+					return $elm$core$Result$Err(msg);
+				}
+			case 'Scale':
+				var s = expr.a;
+				var v = expr.b;
+				var _v22 = A3($author$project$Checking$check, ctx, s, $author$project$Types$TFlt);
+				if (_v22.$ === 'Err') {
+					var msg = _v22.a;
+					return $elm$core$Result$Err(msg);
+				} else {
+					var _v23 = A2($author$project$Checking$synth, ctx, v);
+					if (_v23.$ === 'Ok') {
+						if ((_v23.a.$ === 'TVec') && (_v23.a.b.$ === 'TFlt')) {
+							var _v24 = _v23.a;
+							var n = _v24.a;
+							var _v25 = _v24.b;
+							return $elm$core$Result$Ok(
+								A2($author$project$Types$TVec, n, $author$project$Types$TFlt));
+						} else {
+							var other = _v23.a;
+							return $elm$core$Result$Err(
+								'Scale expected a Vec Flt on the right, but got ' + $elm$core$Debug$toString(other));
+						}
+					} else {
+						var msg = _v23.a;
+						return $elm$core$Result$Err(msg);
+					}
 				}
 			default:
 				var other = expr;
@@ -9491,21 +9772,6 @@ var $author$project$Vector$add = F2(
 			a,
 			b);
 	});
-var $elm$core$List$sum = function (numbers) {
-	return A3($elm$core$List$foldl, $elm$core$Basics$add, 0, numbers);
-};
-var $author$project$Vector$dot = F2(
-	function (a, b) {
-		return $elm$core$List$sum(
-			A3(
-				$elm$core$List$map2,
-				F2(
-					function (x, y) {
-						return x * y;
-					}),
-				a,
-				b));
-	});
 var $author$project$Vector$roundFloat = function (f) {
 	return $elm$core$Basics$round(f);
 };
@@ -9616,6 +9882,337 @@ var $author$project$VectorTest$suite = A2(
 					2);
 			})
 		]));
+var $author$project$Types$Dot = F2(
+	function (a, b) {
+		return {$: 'Dot', a: a, b: b};
+	});
+var $author$project$Types$Flt = function (a) {
+	return {$: 'Flt', a: a};
+};
+var $author$project$Types$Scale = F2(
+	function (a, b) {
+		return {$: 'Scale', a: a, b: b};
+	});
+var $author$project$Types$VecAdd = F2(
+	function (a, b) {
+		return {$: 'VecAdd', a: a, b: b};
+	});
+var $author$project$Types$VecLit = function (a) {
+	return {$: 'VecLit', a: a};
+};
+var $author$project$Types$NVar = function (a) {
+	return {$: 'NVar', a: a};
+};
+var $author$project$Types$VNeutral = F2(
+	function (a, b) {
+		return {$: 'VNeutral', a: a, b: b};
+	});
+var $author$project$Readback$readBackNeutral = F2(
+	function (n, neu) {
+		switch (neu.$) {
+			case 'NVar':
+				var x = neu.a;
+				return $author$project$Types$Var(x);
+			case 'NApp':
+				var rator = neu.a;
+				var arg = neu.b;
+				return A2(
+					$author$project$Types$App,
+					A2($author$project$Readback$readBackNeutral, n, rator),
+					A2($author$project$Readback$readBackNormal, n, arg));
+			case 'NPlus':
+				var l = neu.a;
+				var r = neu.b;
+				return A2(
+					$author$project$Types$Plus,
+					A2($author$project$Readback$readBackNeutral, n, l),
+					A2($author$project$Readback$readBackNormal, n, r));
+			case 'NVecAdd':
+				var l = neu.a;
+				var r = neu.b;
+				return A2(
+					$author$project$Types$VecAdd,
+					A2($author$project$Readback$readBackNeutral, n, l),
+					A2($author$project$Readback$readBackNormal, n, r));
+			case 'NDot':
+				var l = neu.a;
+				var r = neu.b;
+				return A2(
+					$author$project$Types$Dot,
+					A2($author$project$Readback$readBackNeutral, n, l),
+					A2($author$project$Readback$readBackNormal, n, r));
+			default:
+				var l = neu.a;
+				var r = neu.b;
+				return A2(
+					$author$project$Types$Scale,
+					A2($author$project$Readback$readBackNormal, n, l),
+					A2($author$project$Readback$readBackNeutral, n, r));
+		}
+	});
+var $author$project$Readback$readBackNormal = F2(
+	function (n, norm) {
+		return A3(
+			$author$project$Readback$readBackValue,
+			n,
+			$author$project$Types$normalType(norm),
+			$author$project$Types$normalValue(norm));
+	});
+var $author$project$Readback$readBackValue = F3(
+	function (n, ty, v) {
+		var _v0 = _Utils_Tuple2(ty, v);
+		_v0$4:
+		while (true) {
+			_v0$5:
+			while (true) {
+				switch (_v0.a.$) {
+					case 'TNat':
+						switch (_v0.b.$) {
+							case 'VNat':
+								var _v1 = _v0.a;
+								var k = _v0.b.a;
+								return $author$project$Types$Nat(k);
+							case 'VNeutral':
+								break _v0$4;
+							default:
+								break _v0$5;
+						}
+					case 'TFlt':
+						switch (_v0.b.$) {
+							case 'VFloat':
+								var _v2 = _v0.a;
+								var f = _v0.b.a;
+								return $author$project$Types$Flt(f);
+							case 'VNeutral':
+								break _v0$4;
+							default:
+								break _v0$5;
+						}
+					case 'TArr':
+						var _v3 = _v0.a;
+						var t1 = _v3.a;
+						var t2 = _v3.b;
+						var fun = _v0.b;
+						var x = 'x' + $elm$core$String$fromInt(n);
+						var xVal = A2(
+							$author$project$Types$VNeutral,
+							t1,
+							$author$project$Types$NVar(x));
+						return A2(
+							$author$project$Types$Lambda,
+							x,
+							A3(
+								$author$project$Readback$readBackValue,
+								n + 1,
+								t2,
+								A2($author$project$Eval$doApply, fun, xVal)));
+					default:
+						switch (_v0.b.$) {
+							case 'VVec':
+								var _v4 = _v0.a;
+								var elemTy = _v4.b;
+								var vs = _v0.b.a;
+								return $author$project$Types$VecLit(
+									A2(
+										$elm$core$List$map,
+										A2($author$project$Readback$readBackValue, n, elemTy),
+										vs));
+							case 'VNeutral':
+								break _v0$4;
+							default:
+								break _v0$5;
+						}
+				}
+			}
+			return _Debug_todo(
+				'Readback',
+				{
+					start: {line: 38, column: 13},
+					end: {line: 38, column: 23}
+				})('Internal error: mismatched type and value at readBackValue');
+		}
+		var _v5 = _v0.b;
+		var neu = _v5.b;
+		return A2($author$project$Readback$readBackNeutral, n, neu);
+	});
+var $author$project$TestMain$vecSuite = function () {
+	var scaleResult = A2(
+		$author$project$Defs$normWithDefs,
+		$author$project$Defs$noDefs,
+		A2(
+			$author$project$Types$Scale,
+			$author$project$Types$Flt(2),
+			$author$project$Types$VecLit(
+				_List_fromArray(
+					[
+						$author$project$Types$Flt(1),
+						$author$project$Types$Flt(2),
+						$author$project$Types$Flt(3)
+					]))));
+	var mismatchedAddResult = A2(
+		$author$project$Defs$normWithDefs,
+		$author$project$Defs$noDefs,
+		A2(
+			$author$project$Types$VecAdd,
+			$author$project$Types$VecLit(
+				_List_fromArray(
+					[
+						$author$project$Types$Flt(1),
+						$author$project$Types$Flt(2)
+					])),
+			$author$project$Types$VecLit(
+				_List_fromArray(
+					[
+						$author$project$Types$Flt(3),
+						$author$project$Types$Flt(4),
+						$author$project$Types$Flt(5)
+					]))));
+	var litExpr = $author$project$Types$VecLit(
+		_List_fromArray(
+			[
+				$author$project$Types$Flt(1),
+				$author$project$Types$Flt(2),
+				$author$project$Types$Flt(3)
+			]));
+	var litResult = A2($author$project$Defs$normWithDefs, $author$project$Defs$noDefs, litExpr);
+	var dotResult = A2(
+		$author$project$Defs$normWithDefs,
+		$author$project$Defs$noDefs,
+		A2(
+			$author$project$Types$Dot,
+			$author$project$Types$VecLit(
+				_List_fromArray(
+					[
+						$author$project$Types$Flt(1),
+						$author$project$Types$Flt(2),
+						$author$project$Types$Flt(3)
+					])),
+			$author$project$Types$VecLit(
+				_List_fromArray(
+					[
+						$author$project$Types$Flt(4),
+						$author$project$Types$Flt(5),
+						$author$project$Types$Flt(6)
+					]))));
+	var addResult = A2(
+		$author$project$Defs$normWithDefs,
+		$author$project$Defs$noDefs,
+		A2(
+			$author$project$Types$VecAdd,
+			$author$project$Types$VecLit(
+				_List_fromArray(
+					[
+						$author$project$Types$Flt(1),
+						$author$project$Types$Flt(2)
+					])),
+			$author$project$Types$VecLit(
+				_List_fromArray(
+					[
+						$author$project$Types$Flt(3),
+						$author$project$Types$Flt(4)
+					]))));
+	return A2(
+		$elm_explorations$test$Test$describe,
+		'TVec',
+		_List_fromArray(
+			[
+				A2(
+				$elm_explorations$test$Test$test,
+				'a vector literal synthesizes Vec 3 Flt and reads back unchanged',
+				function (_v0) {
+					if (litResult.$ === 'Ok') {
+						var normal = litResult.a;
+						return _Utils_eq(
+							$author$project$Types$normalType(normal),
+							A2(
+								$author$project$Types$TVec,
+								$author$project$Types$Nat(
+									$author$project$Nat$fromSafeInt(3)),
+								$author$project$Types$TFlt)) ? A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$Readback$readBackNormal, 0, normal),
+							litExpr) : $elm_explorations$test$Expect$fail(
+							'Unexpected type: ' + $elm$core$Debug$toString(
+								$author$project$Types$normalType(normal)));
+					} else {
+						var other = litResult;
+						return $elm_explorations$test$Expect$fail(
+							'Unexpected result: ' + $elm$core$Debug$toString(other));
+					}
+				}),
+				A2(
+				$elm_explorations$test$Test$test,
+				'VecAdd adds element-wise',
+				function (_v2) {
+					if (addResult.$ === 'Ok') {
+						var normal = addResult.a;
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$Readback$readBackNormal, 0, normal),
+							$author$project$Types$VecLit(
+								_List_fromArray(
+									[
+										$author$project$Types$Flt(4),
+										$author$project$Types$Flt(6)
+									])));
+					} else {
+						var other = addResult;
+						return $elm_explorations$test$Expect$fail(
+							'Unexpected result: ' + $elm$core$Debug$toString(other));
+					}
+				}),
+				A2(
+				$elm_explorations$test$Test$test,
+				'Dot computes the dot product',
+				function (_v4) {
+					if (dotResult.$ === 'Ok') {
+						var normal = dotResult.a;
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$Readback$readBackNormal, 0, normal),
+							$author$project$Types$Flt(32));
+					} else {
+						var other = dotResult;
+						return $elm_explorations$test$Expect$fail(
+							'Unexpected result: ' + $elm$core$Debug$toString(other));
+					}
+				}),
+				A2(
+				$elm_explorations$test$Test$test,
+				'Scale multiplies every element by the scalar',
+				function (_v6) {
+					if (scaleResult.$ === 'Ok') {
+						var normal = scaleResult.a;
+						return A2(
+							$elm_explorations$test$Expect$equal,
+							A2($author$project$Readback$readBackNormal, 0, normal),
+							$author$project$Types$VecLit(
+								_List_fromArray(
+									[
+										$author$project$Types$Flt(2),
+										$author$project$Types$Flt(4),
+										$author$project$Types$Flt(6)
+									])));
+					} else {
+						var other = scaleResult;
+						return $elm_explorations$test$Expect$fail(
+							'Unexpected result: ' + $elm$core$Debug$toString(other));
+					}
+				}),
+				A2(
+				$elm_explorations$test$Test$test,
+				'VecAdd on mismatched lengths is a type error',
+				function (_v8) {
+					if (mismatchedAddResult.$ === 'Err') {
+						return $elm_explorations$test$Expect$pass;
+					} else {
+						var normal = mismatchedAddResult.a;
+						return $elm_explorations$test$Expect$fail(
+							'Expected a type error, but got: ' + $elm$core$Debug$toString(normal));
+					}
+				})
+			]));
+}();
 var $author$project$Test$Generated$Main$main = A2(
 	$author$project$Test$Runner$Node$run,
 	{
@@ -9625,7 +10222,7 @@ var $author$project$Test$Generated$Main$main = A2(
 		processes: 22,
 		report: $author$project$Test$Reporter$Reporter$ConsoleReport($author$project$Console$Text$Monochrome),
 		runs: 100,
-		seed: 71800747157698
+		seed: 165158144764754
 	},
 	_List_fromArray(
 		[
@@ -9645,7 +10242,8 @@ var $author$project$Test$Generated$Main$main = A2(
 			'TestMain',
 			_List_fromArray(
 				[
-					$author$project$Test$Runner$Node$check($author$project$TestMain$suite)
+					$author$project$Test$Runner$Node$check($author$project$TestMain$suite),
+					$author$project$Test$Runner$Node$check($author$project$TestMain$vecSuite)
 				])),
 			_Utils_Tuple2(
 			'VectorTest',
@@ -9657,7 +10255,7 @@ var $author$project$Test$Generated$Main$main = A2(
 _Platform_export({'Test':{'Generated':{'Main':{'init':$author$project$Test$Generated$Main$main($elm$json$Json$Decode$int)(0)}}}});}(this));
 return this.Elm;
 })({});
-var pipeFilename = "\\\\.\\pipe\\elm_test-32948-1";
+var pipeFilename = "\\\\.\\pipe\\elm_test-7744-1";
 var net = require('net'),
   client = net.createConnection(pipeFilename);
 

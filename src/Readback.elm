@@ -28,6 +28,9 @@ readBackValue n ty v =
             in
             Lambda x (readBackValue (n + 1) t2 (doApply fun xVal))
 
+        ( TVec _ elemTy, VVec vs ) ->
+            VecLit (List.map (readBackValue n elemTy) vs)
+
         ( _, VNeutral _ neu ) ->
             readBackNeutral n neu
 
@@ -46,3 +49,12 @@ readBackNeutral n neu =
 
         NPlus l r ->
             Plus (readBackNeutral n l) (readBackNormal n r)
+
+        NVecAdd l r ->
+            VecAdd (readBackNeutral n l) (readBackNormal n r)
+
+        NDot l r ->
+            Dot (readBackNeutral n l) (readBackNormal n r)
+
+        NScale l r ->
+            Scale (readBackNormal n l) (readBackNeutral n r)

@@ -53,6 +53,10 @@ type Expr
     | Nat Natural      -- replaces Zero/Add1
     | Flt Float        -- floating-point literal
     | Ann Expr Ty
+    | VecLit (List Expr)  -- vector literal; length is List.length
+    | VecAdd Expr Expr    -- element-wise addition (Nat or Flt elements)
+    | Dot Expr Expr       -- dot product, Vec n Flt -> Vec n Flt -> Flt
+    | Scale Expr Expr     -- scalar * vector, Flt -> Vec n Flt -> Vec n Flt
 
 
 -- ── Semantic domain: Values, Neutrals, Normals (§5) ───────────────────────
@@ -62,6 +66,7 @@ type Value
     | VFloat Float
     | VClosure (Env Value) Name Expr
     | VNeutral Ty Neutral
+    | VVec (List Value)
 
 
 -- A Neutral is an eliminator stuck on a free variable.
@@ -70,6 +75,9 @@ type Neutral
     | NApp Neutral Normal
     -- NRec omitted: arithmetic is handled directly via NPlus.
     | NPlus Neutral Normal  -- stuck plus: neutral left operand, normal right
+    | NVecAdd Neutral Normal  -- mirrors NPlus's convention
+    | NDot Neutral Normal
+    | NScale Normal Neutral  -- scalar is normal, vector operand is the stuck one
 
 
 -- A Normal pairs a value with its type for typed read-back.

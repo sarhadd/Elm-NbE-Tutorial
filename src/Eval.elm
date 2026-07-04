@@ -4,6 +4,7 @@ import Dict
 import Types exposing (..)
 import Nat as Natural exposing (Natural)
 import Basics exposing (round)
+import Vector
 
 
 eval : Env Value -> Expr -> Value
@@ -42,6 +43,51 @@ eval env expr =
 
         Ann e t ->
             eval env e
+
+        VecLit elems ->
+            VVec (List.map (eval env) elems)
+
+        VecAdd l r ->
+            case ( eval env l, eval env r ) of
+                ( VVec ls, VVec rs ) ->
+                    VVec (List.map2 addValue ls rs)
+                _ ->
+                    Debug.todo "Internal error: VecAdd applied to non-vector"
+
+        Dot l r ->
+            case ( eval env l, eval env r ) of
+                ( VVec ls, VVec rs ) ->
+                    VFloat (Vector.dot (List.map toFloatValue ls) (List.map toFloatValue rs))
+                _ ->
+                    Debug.todo "Internal error: Dot applied to non-vector"
+
+        Scale s v ->
+            case ( eval env s, eval env v ) of
+                ( VFloat c, VVec vs ) ->
+                    VVec (List.map (\x -> VFloat (c * toFloatValue x)) vs)
+                _ ->
+                    Debug.todo "Internal error: Scale applied to non-scalar/non-vector"
+
+
+-- Element-wise addition shared by Plus and VecAdd
+addValue : Value -> Value -> Value
+addValue a b =
+    case ( a, b ) of
+        ( VNat x, VNat y ) ->
+            VNat (Natural.add x y)
+        ( VFloat x, VFloat y ) ->
+            VFloat (x + y)
+        _ ->
+            Debug.todo "Internal error: addValue applied to mismatched or non-numeric values"
+
+
+toFloatValue : Value -> Float
+toFloatValue v =
+    case v of
+        VFloat f ->
+            f
+        _ ->
+            Debug.todo "Internal error: expected a float value"
 
 
 doApply : Value -> Value -> Value
