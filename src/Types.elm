@@ -1,7 +1,7 @@
 -- Value, Neutral, Normal types.
 module Types exposing (..)
 
-import Natural exposing (Natural)
+import Nat exposing (Natural)
 import Dict exposing (Dict)
 
 

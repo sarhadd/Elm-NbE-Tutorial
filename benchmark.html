@@ -14804,37 +14804,31 @@ var $elm_explorations$benchmark$Benchmark$Runner$program = function (benchmark) 
 			view: $elm_explorations$benchmark$Benchmark$Runner$App$view
 		});
 };
-var $author$project$Natural$Natural = function (a) {
+var $author$project$Nat$Natural = function (a) {
 	return {$: 'Natural', a: a};
 };
-var $author$project$Natural$numBits = 26;
-var $author$project$Natural$base = A2($elm$core$Basics$pow, 2, $author$project$Natural$numBits);
-var $author$project$Natural$iDivModBy = F2(
-	function (divisor, dividend) {
-		return _Utils_Tuple2(
-			(dividend / divisor) | 0,
-			A2($elm$core$Basics$modBy, divisor, dividend));
-	});
-var $author$project$Natural$addHelper = F4(
+var $author$project$Nat$base = A2($elm$core$Basics$pow, 2, 26);
+var $author$project$Nat$addHelper = F4(
 	function (xsLE, ysLE, carry, zsBE) {
 		addHelper:
 		while (true) {
 			var _v0 = _Utils_Tuple2(xsLE, ysLE);
 			if (!_v0.a.b) {
 				if (!_v0.b.b) {
-					var finalZsBE = (!carry) ? zsBE : A2($elm$core$List$cons, carry, zsBE);
-					return $elm$core$List$reverse(finalZsBE);
+					return $elm$core$List$reverse(
+						(!carry) ? zsBE : A2($elm$core$List$cons, carry, zsBE));
 				} else {
-					var _v3 = _v0.b;
-					var y = _v3.a;
-					var restYsLE = _v3.b;
-					var _v4 = A2($author$project$Natural$iDivModBy, $author$project$Natural$base, y + carry);
-					var newCarry = _v4.a;
-					var z = _v4.b;
+					var _v2 = _v0.b;
+					var y = _v2.a;
+					var restYsLE = _v2.b;
+					var z = y + carry;
 					var $temp$xsLE = _List_Nil,
 						$temp$ysLE = restYsLE,
-						$temp$carry = newCarry,
-						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
+						$temp$carry = (z / $author$project$Nat$base) | 0,
+						$temp$zsBE = A2(
+						$elm$core$List$cons,
+						A2($elm$core$Basics$modBy, $author$project$Nat$base, z),
+						zsBE);
 					xsLE = $temp$xsLE;
 					ysLE = $temp$ysLE;
 					carry = $temp$carry;
@@ -14846,32 +14840,34 @@ var $author$project$Natural$addHelper = F4(
 					var _v1 = _v0.a;
 					var x = _v1.a;
 					var restXsLE = _v1.b;
-					var _v2 = A2($author$project$Natural$iDivModBy, $author$project$Natural$base, x + carry);
-					var newCarry = _v2.a;
-					var z = _v2.b;
+					var z = x + carry;
 					var $temp$xsLE = restXsLE,
 						$temp$ysLE = _List_Nil,
-						$temp$carry = newCarry,
-						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
+						$temp$carry = (z / $author$project$Nat$base) | 0,
+						$temp$zsBE = A2(
+						$elm$core$List$cons,
+						A2($elm$core$Basics$modBy, $author$project$Nat$base, z),
+						zsBE);
 					xsLE = $temp$xsLE;
 					ysLE = $temp$ysLE;
 					carry = $temp$carry;
 					zsBE = $temp$zsBE;
 					continue addHelper;
 				} else {
-					var _v5 = _v0.a;
-					var x = _v5.a;
-					var restXsLE = _v5.b;
-					var _v6 = _v0.b;
-					var y = _v6.a;
-					var restYsLE = _v6.b;
-					var _v7 = A2($author$project$Natural$iDivModBy, $author$project$Natural$base, (x + y) + carry);
-					var newCarry = _v7.a;
-					var z = _v7.b;
+					var _v3 = _v0.a;
+					var x = _v3.a;
+					var restXsLE = _v3.b;
+					var _v4 = _v0.b;
+					var y = _v4.a;
+					var restYsLE = _v4.b;
+					var z = (x + y) + carry;
 					var $temp$xsLE = restXsLE,
 						$temp$ysLE = restYsLE,
-						$temp$carry = newCarry,
-						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
+						$temp$carry = (z / $author$project$Nat$base) | 0,
+						$temp$zsBE = A2(
+						$elm$core$List$cons,
+						A2($elm$core$Basics$modBy, $author$project$Nat$base, z),
+						zsBE);
 					xsLE = $temp$xsLE;
 					ysLE = $temp$ysLE;
 					carry = $temp$carry;
@@ -14881,12 +14877,16 @@ var $author$project$Natural$addHelper = F4(
 			}
 		}
 	});
-var $author$project$Natural$add = F2(
+var $author$project$Nat$addLE = F2(
+	function (xsLE, ysLE) {
+		return A4($author$project$Nat$addHelper, xsLE, ysLE, 0, _List_Nil);
+	});
+var $author$project$Nat$add = F2(
 	function (_v0, _v1) {
 		var xsLE = _v0.a;
 		var ysLE = _v1.a;
-		return $author$project$Natural$Natural(
-			A4($author$project$Natural$addHelper, xsLE, ysLE, 0, _List_Nil));
+		return $author$project$Nat$Natural(
+			A2($author$project$Nat$addLE, xsLE, ysLE));
 	});
 var $author$project$PeanoNat$Add1 = function (a) {
 	return {$: 'Add1', a: a};
@@ -14922,42 +14922,22 @@ var $elm_explorations$benchmark$Benchmark$compare = F5(
 					$elm_explorations$benchmark$Benchmark$Status$Cold)
 				]));
 	});
-var $author$project$Natural$quotientModBy = F2(
-	function (divisor, dividend) {
-		return _Utils_Tuple2(
-			$elm$core$Basics$floor(dividend / divisor),
-			A2($elm$core$Basics$modBy, divisor, dividend));
-	});
-var $author$project$Natural$fromIntHelper = F2(
-	function (digitsBE, n) {
-		fromIntHelper:
-		while (true) {
-			if (!n) {
-				return $elm$core$List$reverse(digitsBE);
-			} else {
-				var _v0 = A2($author$project$Natural$quotientModBy, $author$project$Natural$base, n);
-				var q = _v0.a;
-				var r = _v0.b;
-				var $temp$digitsBE = A2($elm$core$List$cons, r, digitsBE),
-					$temp$n = q;
-				digitsBE = $temp$digitsBE;
-				n = $temp$n;
-				continue fromIntHelper;
-			}
-		}
-	});
-var $author$project$Natural$maxBits = 53;
-var $author$project$Natural$maxSafeInt = A2($elm$core$Basics$pow, 2, $author$project$Natural$maxBits) - 1;
-var $author$project$Natural$fromInt = function (x) {
-	return ((x >= 0) && (_Utils_cmp(x, $author$project$Natural$maxSafeInt) < 1)) ? $elm$core$Maybe$Just(
-		$author$project$Natural$Natural(
-			A2($author$project$Natural$fromIntHelper, _List_Nil, x))) : $elm$core$Maybe$Nothing;
+var $author$project$Nat$fromIntHelper = function (n) {
+	return (!n) ? _List_Nil : A2(
+		$elm$core$List$cons,
+		A2($elm$core$Basics$modBy, $author$project$Nat$base, n),
+		$author$project$Nat$fromIntHelper((n / $author$project$Nat$base) | 0));
 };
-var $author$project$Natural$zero = $author$project$Natural$Natural(_List_Nil);
-var $author$project$Natural$fromSafeInt = A2(
+var $author$project$Nat$fromInt = function (n) {
+	return (n < 0) ? $elm$core$Maybe$Nothing : $elm$core$Maybe$Just(
+		$author$project$Nat$Natural(
+			$author$project$Nat$fromIntHelper(n)));
+};
+var $author$project$Nat$zero = $author$project$Nat$Natural(_List_Nil);
+var $author$project$Nat$fromSafeInt = A2(
 	$elm$core$Basics$composeR,
-	$author$project$Natural$fromInt,
-	$elm$core$Maybe$withDefault($author$project$Natural$zero));
+	$author$project$Nat$fromInt,
+	$elm$core$Maybe$withDefault($author$project$Nat$zero));
 var $author$project$PeanoNat$Zero = {$: 'Zero'};
 var $author$project$PeanoNat$fromIntHelper = function (n) {
 	return (!n) ? $author$project$PeanoNat$Zero : $author$project$PeanoNat$Add1(
@@ -14975,8 +14955,8 @@ var $author$project$PeanoNat$fromSafeInt = A2(
 var $author$project$NatBenchmark$addSuite = function () {
 	var peanoB = $author$project$PeanoNat$fromSafeInt(500);
 	var peanoA = $author$project$PeanoNat$fromSafeInt(500);
-	var natB = $author$project$Natural$fromSafeInt(500);
-	var natA = $author$project$Natural$fromSafeInt(500);
+	var natB = $author$project$Nat$fromSafeInt(500);
+	var natA = $author$project$Nat$fromSafeInt(500);
 	return A5(
 		$elm_explorations$benchmark$Benchmark$compare,
 		'add: 500 + 500',
@@ -14984,9 +14964,9 @@ var $author$project$NatBenchmark$addSuite = function () {
 		function (_v0) {
 			return A2($author$project$PeanoNat$add, peanoA, peanoB);
 		},
-		'Natural.add',
+		'Nat.add',
 		function (_v1) {
-			return A2($author$project$Natural$add, natA, natB);
+			return A2($author$project$Nat$add, natA, natB);
 		});
 }();
 var $author$project$NatBenchmark$constructionSuite = A5(
@@ -14996,267 +14976,58 @@ var $author$project$NatBenchmark$constructionSuite = A5(
 	function (_v0) {
 		return $author$project$PeanoNat$fromSafeInt(2000);
 	},
-	'Natural.fromSafeInt',
+	'Nat.fromSafeInt',
 	function (_v1) {
-		return $author$project$Natural$fromSafeInt(2000);
+		return $author$project$Nat$fromSafeInt(2000);
 	});
 var $elm_explorations$benchmark$Benchmark$describe = $elm_explorations$benchmark$Benchmark$Benchmark$Group;
-var $author$project$Natural$sdMulHelper = F4(
-	function (xsLE, y, carry, zsBE) {
-		sdMulHelper:
-		while (true) {
-			if (!xsLE.b) {
-				return (!carry) ? zsBE : A2($elm$core$List$cons, carry, zsBE);
-			} else {
-				var x = xsLE.a;
-				var restXsLE = xsLE.b;
-				var product = (x * y) + carry;
-				var _v1 = A2($author$project$Natural$iDivModBy, $author$project$Natural$base, product);
-				var newCarry = _v1.a;
-				var z = _v1.b;
-				var $temp$xsLE = restXsLE,
-					$temp$y = y,
-					$temp$carry = newCarry,
-					$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
-				xsLE = $temp$xsLE;
-				y = $temp$y;
-				carry = $temp$carry;
-				zsBE = $temp$zsBE;
-				continue sdMulHelper;
-			}
+var $author$project$Nat$scaleHelper = F3(
+	function (y, xsLE, carry) {
+		if (!xsLE.b) {
+			return (!carry) ? _List_Nil : _List_fromArray(
+				[carry]);
+		} else {
+			var x = xsLE.a;
+			var restXsLE = xsLE.b;
+			var product = (y * x) + carry;
+			return A2(
+				$elm$core$List$cons,
+				A2($elm$core$Basics$modBy, $author$project$Nat$base, product),
+				A3($author$project$Nat$scaleHelper, y, restXsLE, (product / $author$project$Nat$base) | 0));
 		}
 	});
-var $author$project$Natural$sdMul = F2(
-	function (xsLE, y) {
-		var _v0 = _Utils_Tuple2(xsLE, y);
-		_v0$0:
-		while (true) {
-			switch (_v0.b) {
-				case 0:
-					if (!_v0.a.b) {
-						break _v0$0;
-					} else {
-						return _List_Nil;
-					}
-				case 1:
-					if (!_v0.a.b) {
-						break _v0$0;
-					} else {
-						return xsLE;
-					}
-				default:
-					if (!_v0.a.b) {
-						break _v0$0;
-					} else {
-						return $elm$core$List$reverse(
-							A4($author$project$Natural$sdMulHelper, xsLE, y, 0, _List_Nil));
-					}
-			}
-		}
-		return _List_Nil;
-	});
-var $author$project$Natural$mulHelper = F3(
-	function (xsLE, ysBE, zsLE) {
-		mulHelper:
-		while (true) {
-			if (!ysBE.b) {
-				return zsLE;
-			} else {
-				var y = ysBE.a;
-				var restYsBE = ysBE.b;
-				var augend = _Utils_eq(zsLE, _List_Nil) ? _List_Nil : A2($elm$core$List$cons, 0, zsLE);
-				var addend = A2($author$project$Natural$sdMul, xsLE, y);
-				var partialSum = A4($author$project$Natural$addHelper, augend, addend, 0, _List_Nil);
-				var $temp$xsLE = xsLE,
-					$temp$ysBE = restYsBE,
-					$temp$zsLE = partialSum;
-				xsLE = $temp$xsLE;
-				ysBE = $temp$ysBE;
-				zsLE = $temp$zsLE;
-				continue mulHelper;
-			}
-		}
-	});
-var $author$project$Natural$shiftLeftByHelper = F2(
-	function (n, digitsLE) {
-		shiftLeftByHelper:
-		while (true) {
-			if (!n) {
-				return digitsLE;
-			} else {
-				var $temp$n = n - 1,
-					$temp$digitsLE = A2($elm$core$List$cons, 0, digitsLE);
-				n = $temp$n;
-				digitsLE = $temp$digitsLE;
-				continue shiftLeftByHelper;
-			}
-		}
-	});
-var $author$project$Natural$shiftLeftBy = F2(
-	function (n, digitsLE) {
-		if (!digitsLE.b) {
+var $author$project$Nat$shiftDigits = F2(
+	function (i, xsLE) {
+		if (!xsLE.b) {
 			return _List_Nil;
 		} else {
-			return A2($author$project$Natural$shiftLeftByHelper, n, digitsLE);
+			return _Utils_ap(
+				A2($elm$core$List$repeat, i, 0),
+				xsLE);
 		}
 	});
-var $author$project$Natural$splitAt = F2(
-	function (n, list) {
-		return _Utils_Tuple2(
-			A2($elm$core$List$take, n, list),
-			A2($elm$core$List$drop, n, list));
-	});
-var $author$project$Natural$removeLeadingZeros = function (digits) {
-	removeLeadingZeros:
-	while (true) {
-		if (!digits.b) {
-			return _List_Nil;
-		} else {
-			var d = digits.a;
-			var restDigits = digits.b;
-			if (!d) {
-				var $temp$digits = restDigits;
-				digits = $temp$digits;
-				continue removeLeadingZeros;
-			} else {
-				return digits;
-			}
-		}
-	}
-};
-var $author$project$Natural$subHelper = F4(
-	function (xsLE, ysLE, carry, zsBE) {
-		subHelper:
-		while (true) {
-			var _v0 = _Utils_Tuple2(xsLE, ysLE);
-			if (!_v0.a.b) {
-				if (!_v0.b.b) {
-					return (!carry) ? $elm$core$List$reverse(
-						$author$project$Natural$removeLeadingZeros(zsBE)) : _List_Nil;
-				} else {
-					var _v3 = _v0.b;
-					var y = _v3.a;
-					var restYsLE = _v3.b;
-					var _v4 = A2($author$project$Natural$quotientModBy, $author$project$Natural$base, carry - y);
-					var newCarry = _v4.a;
-					var z = _v4.b;
-					var $temp$xsLE = _List_Nil,
-						$temp$ysLE = restYsLE,
-						$temp$carry = newCarry,
-						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
-					xsLE = $temp$xsLE;
-					ysLE = $temp$ysLE;
-					carry = $temp$carry;
-					zsBE = $temp$zsBE;
-					continue subHelper;
-				}
-			} else {
-				if (!_v0.b.b) {
-					var _v1 = _v0.a;
-					var x = _v1.a;
-					var restXsLE = _v1.b;
-					var _v2 = A2($author$project$Natural$quotientModBy, $author$project$Natural$base, x + carry);
-					var newCarry = _v2.a;
-					var z = _v2.b;
-					var $temp$xsLE = restXsLE,
-						$temp$ysLE = _List_Nil,
-						$temp$carry = newCarry,
-						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
-					xsLE = $temp$xsLE;
-					ysLE = $temp$ysLE;
-					carry = $temp$carry;
-					zsBE = $temp$zsBE;
-					continue subHelper;
-				} else {
-					var _v5 = _v0.a;
-					var x = _v5.a;
-					var restXsLE = _v5.b;
-					var _v6 = _v0.b;
-					var y = _v6.a;
-					var restYsLE = _v6.b;
-					var _v7 = A2($author$project$Natural$quotientModBy, $author$project$Natural$base, (x - y) + carry);
-					var newCarry = _v7.a;
-					var z = _v7.b;
-					var $temp$xsLE = restXsLE,
-						$temp$ysLE = restYsLE,
-						$temp$carry = newCarry,
-						$temp$zsBE = A2($elm$core$List$cons, z, zsBE);
-					xsLE = $temp$xsLE;
-					ysLE = $temp$ysLE;
-					carry = $temp$carry;
-					zsBE = $temp$zsBE;
-					continue subHelper;
-				}
-			}
-		}
-	});
-var $author$project$Natural$karatsuba = F2(
-	function (xsLE, ysLE) {
-		var _v0 = _Utils_Tuple2(xsLE, ysLE);
-		if (!_v0.a.b) {
-			return _List_Nil;
-		} else {
-			if (!_v0.b.b) {
-				return _List_Nil;
-			} else {
-				if ((_v0.a.a === 1) && (!_v0.a.b.b)) {
-					var _v1 = _v0.a;
-					return ysLE;
-				} else {
-					if ((_v0.b.a === 1) && (!_v0.b.b.b)) {
-						var _v2 = _v0.b;
-						return xsLE;
-					} else {
-						var yLen = $elm$core$List$length(ysLE);
-						var xLen = $elm$core$List$length(xsLE);
-						if ((xLen < 1000) || (yLen < 1000)) {
-							return A3(
-								$author$project$Natural$mulHelper,
-								xsLE,
-								$elm$core$List$reverse(ysLE),
-								_List_Nil);
-						} else {
-							var n = A2($elm$core$Basics$max, xLen, yLen);
-							var m = (n / 2) | 0;
-							var m2 = 2 * m;
-							var _v3 = A2($author$project$Natural$splitAt, m, ysLE);
-							var y0 = _v3.a;
-							var y1 = _v3.b;
-							var _v4 = A2($author$project$Natural$splitAt, m, xsLE);
-							var x0 = _v4.a;
-							var x1 = _v4.b;
-							var z0 = A2($author$project$Natural$karatsuba, x0, y0);
-							var t1 = A2(
-								$author$project$Natural$karatsuba,
-								A4($author$project$Natural$addHelper, x0, x1, 0, _List_Nil),
-								A4($author$project$Natural$addHelper, y0, y1, 0, _List_Nil));
-							var t2 = A4($author$project$Natural$subHelper, t1, z0, 0, _List_Nil);
-							var z2 = A2($author$project$Natural$karatsuba, x1, y1);
-							var z1 = A4($author$project$Natural$subHelper, t2, z2, 0, _List_Nil);
-							var t3 = A4(
-								$author$project$Natural$addHelper,
-								A2($author$project$Natural$shiftLeftBy, m, z1),
-								z0,
-								0,
-								_List_Nil);
-							return A4(
-								$author$project$Natural$addHelper,
-								A2($author$project$Natural$shiftLeftBy, m2, z2),
-								t3,
-								0,
-								_List_Nil);
-						}
-					}
-				}
-			}
-		}
-	});
-var $author$project$Natural$mul = F2(
+var $author$project$Nat$mul = F2(
 	function (_v0, _v1) {
 		var xsLE = _v0.a;
 		var ysLE = _v1.a;
-		return $author$project$Natural$Natural(
-			A2($author$project$Natural$karatsuba, xsLE, ysLE));
+		return $author$project$Nat$Natural(
+			A3(
+				$elm$core$List$foldl,
+				F2(
+					function (partial, acc) {
+						return A2($author$project$Nat$addLE, partial, acc);
+					}),
+				_List_Nil,
+				A2(
+					$elm$core$List$indexedMap,
+					F2(
+						function (i, y) {
+							return (!y) ? _List_Nil : A2(
+								$author$project$Nat$shiftDigits,
+								i,
+								A3($author$project$Nat$scaleHelper, y, xsLE, 0));
+						}),
+					ysLE)));
 	});
 var $author$project$PeanoNat$mul = F2(
 	function (m, n) {
@@ -15273,8 +15044,8 @@ var $author$project$PeanoNat$mul = F2(
 var $author$project$NatBenchmark$mulSuite = function () {
 	var peanoB = $author$project$PeanoNat$fromSafeInt(80);
 	var peanoA = $author$project$PeanoNat$fromSafeInt(80);
-	var natB = $author$project$Natural$fromSafeInt(80);
-	var natA = $author$project$Natural$fromSafeInt(80);
+	var natB = $author$project$Nat$fromSafeInt(80);
+	var natA = $author$project$Nat$fromSafeInt(80);
 	return A5(
 		$elm_explorations$benchmark$Benchmark$compare,
 		'mul: 80 * 80',
@@ -15282,14 +15053,14 @@ var $author$project$NatBenchmark$mulSuite = function () {
 		function (_v0) {
 			return A2($author$project$PeanoNat$mul, peanoA, peanoB);
 		},
-		'Natural.mul',
+		'Nat.mul',
 		function (_v1) {
-			return A2($author$project$Natural$mul, natA, natB);
+			return A2($author$project$Nat$mul, natA, natB);
 		});
 }();
 var $author$project$NatBenchmark$suite = A2(
 	$elm_explorations$benchmark$Benchmark$describe,
-	'PeanoNat (unary) vs elm-natural (base-2^26)',
+	'PeanoNat (unary) vs Nat (base-2^26)',
 	_List_fromArray(
 		[$author$project$NatBenchmark$constructionSuite, $author$project$NatBenchmark$addSuite, $author$project$NatBenchmark$mulSuite]));
 var $author$project$NatBenchmark$main = $elm_explorations$benchmark$Benchmark$Runner$program($author$project$NatBenchmark$suite);

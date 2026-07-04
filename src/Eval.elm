@@ -2,7 +2,7 @@ module Eval exposing (..)
 
 import Dict
 import Types exposing (..)
-import Natural exposing (Natural)
+import Nat as Natural exposing (Natural)
 import Basics exposing (round)
 
 
@@ -33,7 +33,7 @@ eval env expr =
         -- TODO: add Plus case!!
         Plus l r ->
             case (eval env l, eval env r) of    -- evaluate both sides to get their values
-                (VNat a, VNat b) ->             -- Once we get their values, we apply the 'add' opperation from Natural.elm
+                (VNat a, VNat b) ->             -- Once we get their values, we apply the 'add' opperation from Nat.elm
                     VNat (Natural.add a b)
                 (VFloat a, VFloat b) ->
                     VFloat (a + b)

@@ -15,7 +15,7 @@ main =
     Test.Runner.Node.run
         { runs = 100
         , report = ConsoleReport Monochrome
-        , seed = 8255000234459
+        , seed = 71800747157698
         , processes = 22
         , globs =
             []

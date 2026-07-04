@@ -3,8 +3,7 @@
     "source-directories": [
         "src",
         "tests",
-        "benchmarks",
-        "../elm-natural/src"
+        "benchmarks"
     ],
     "elm-version": "0.19.1",
     "dependencies": {
