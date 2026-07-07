@@ -5,7 +5,7 @@ module Checking exposing (..)
 
 import Dict exposing (Dict)
 import Types exposing (..)
-import Nat as Natural exposing (Natural)
+import Nat as Natural exposing (..)
 
 
 type alias Ctx =
@@ -162,6 +162,9 @@ check ctx expr expectedTy =
                 Err msg ->
                     Err msg
 
+-- Note: For Vectors, a TVec matches only if the size Expr and element Ty are structurally
+-- equal (ty == expectedTy). That means TVec (Nat 3) TFlt equals another TVec (Nat 3)
+-- TFlt, but not TVec (Add1 (Add1 Zero)) TFlt unless expressions are structurally identical.
 
 -- ── Helpers ───────────────────────────────────────────────────────────────────
 

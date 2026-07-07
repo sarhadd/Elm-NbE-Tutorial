@@ -1,2 +1,0 @@
--- Main
--- Normalize main function will go here.
