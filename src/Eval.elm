@@ -2,7 +2,7 @@ module Eval exposing (..)
 
 import Dict
 import Types exposing (..)
-import Nat as Natural exposing (Natural)
+import Natural as Natural exposing (Natural)
 import Basics exposing (round)
 import Vector
 

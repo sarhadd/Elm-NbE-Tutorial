@@ -13,7 +13,7 @@ module PeanoNat exposing
     type Natural = Zero | Add1 Natural
 
 These are NOT used in the main NbE project.
-The main project uses Nat.elm (local, base-2^26 positional representation).
+The main project uses elm-natural for its natural-number operations.
 
 Constructors are intentionally exposed here so you can pattern-match and see
 the structure — that's the point of the comparison.

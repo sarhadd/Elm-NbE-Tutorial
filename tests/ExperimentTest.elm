@@ -12,7 +12,7 @@ project (no external elm-natural dependency in the main line anymore):
     - O(n) space. The number 1000 allocates 1000 constructors.
     - O(n) add, O(n²) mul. Large numbers hang or OOM.
 
-  Nat (src/Nat.elm)  ─  base-2^26 polynomial, elm-natural's representational idea
+  Natural (elm-natural)  ─  base-2^26 polynomial representation
     [c₀, c₁, ...] where value = Σ cᵢ · 2^(26i).
     + O(log n) space, fast arithmetic (schoolbook mul, recursive-doubling division —
       simpler than elm-natural's Karatsuba/Knuth, same digit-count win over Peano).
@@ -27,7 +27,7 @@ only — everything else in this project (Types.elm, Eval.elm, ...) uses Nat.
 import Expect
 import Test exposing (..)
 import PeanoNat
-import Nat
+import Natural as Nat
 
 
 suite : Test

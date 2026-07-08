@@ -9,7 +9,7 @@ import Defs exposing (..)
 import Types exposing (..)
 import Checking exposing (..)
 import Readback
-import Nat as Natural
+import Natural as Natural
 
 suite : Test
 suite =

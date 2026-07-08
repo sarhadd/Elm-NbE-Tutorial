@@ -5,7 +5,7 @@ module Checking exposing (..)
 
 import Dict exposing (Dict)
 import Types exposing (..)
-import Nat as Natural exposing (..)
+import Natural as Natural
 
 
 type alias Ctx =

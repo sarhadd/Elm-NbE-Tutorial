@@ -23,7 +23,7 @@ or
 
 import Benchmark exposing (Benchmark)
 import Benchmark.Runner exposing (BenchmarkProgram, program)
-import Nat
+import Natural as Nat
 import PeanoNat
 
 
