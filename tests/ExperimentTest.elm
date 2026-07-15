@@ -24,8 +24,12 @@ so the interpreter doesn't choke. PeanoNat lives here for pedagogy and compariso
 only — everything else in this project (Types.elm, Eval.elm, ...) uses Nat.
 -}
 
+import Dict
 import Expect
+import Readback
 import Test exposing (..)
+import Types exposing (..)
+import Defs exposing (..)
 import PeanoNat
 import Natural as Nat
 
@@ -97,6 +101,37 @@ suite =
                     Expect.equal
                         (Nat.toInt (Nat.mul n n))
                         998001
+            ]
+        , describe "Neutral normalization"
+            [ test "neutral function application readbacks to App" <|
+                \_ ->
+                    let
+                        defs : Defs
+                        defs =
+                            Dict.fromList
+                                [ ( "g"
+                                  , Normal
+                                        { normalType = TArr TNat TNat
+                                        , normalValue = VNeutral (TArr TNat TNat) (NVar "g")
+                                        }
+                                  )
+                                ]
+
+                        expr : Expr
+                        expr =
+                            App
+                                (Var "g")
+                                (Nat (Nat.fromSafeInt 1))
+
+                        result : Result Message Expr
+                        result =
+                            Result.map (Readback.readBackNormal 0) (normWithDefs defs expr)
+                    in
+                    case result of
+                        Ok readExpr ->
+                            Expect.equal readExpr expr
+                        Err msg ->
+                            Expect.fail msg
             ]
         ]
 

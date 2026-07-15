@@ -70,7 +70,7 @@ type Value
 
 
 -- A Neutral is an eliminator stuck on a free variable.
-type Neutral
+type Neutral    -- either a neutral or a neutral applied to a value
     = NVar Name
     | NApp Neutral Normal
     -- NRec omitted: arithmetic is handled directly via NPlus.

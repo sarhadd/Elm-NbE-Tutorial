@@ -89,11 +89,37 @@ toFloatValue v =
             Debug.todo "Internal error: expected a float value"
 
 
+valueToNormal : Value -> Normal
+valueToNormal v =
+    case v of
+        VNat n ->
+            Normal { normalType = TNat, normalValue = VNat n }
+
+        VFloat f ->
+            Normal { normalType = TFlt, normalValue = VFloat f }
+
+        VVec vs ->
+            Normal
+                { normalType = TVec (Nat (Natural.fromSafeInt (List.length vs))) TFlt
+                , normalValue = VVec vs
+                }
+
+        VNeutral ty neu ->
+            Normal { normalType = ty, normalValue = VNeutral ty neu }
+
+        VClosure _ _ _ ->
+            Debug.todo "Internal error: cannot convert closure to normal without a known type"
+
+
 doApply : Value -> Value -> Value -- Apply the function to the argument
 doApply rator arg =
     case rator of
         VClosure env x body ->
             eval (extend env x arg) body
+
+        VNeutral ty neu ->
+            VNeutral ty (NApp neu (valueToNormal arg))
+
         _ -> 
             Debug.todo  ("Error: applying non-function")
 
