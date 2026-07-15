@@ -50,13 +50,13 @@ normWithDefs defs e =
             Ok (Normal { normalType = t, normalValue = v })
 
 
-addDefs : Defs -> List ( Name, Expr ) -> Result Message Defs
+addDefs : Defs -> List ( Name, Expr ) -> Result Message Defs -- Take a list of definitions and load them into env
 addDefs defs pairs =
     case pairs of
-        [] ->
+        [] ->                   -- no def left, we are done. Return env as it is
             Ok defs
 
-        ( x, e ) :: more ->
+        ( x, e ) :: more ->     -- evaluate e (value)
             case normWithDefs defs e of
                 Err msg ->
                     Err msg

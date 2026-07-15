@@ -31,7 +31,6 @@ eval env expr =
         -- Rec t tgt base step ->
         --     doRec t (eval env tgt) (eval env base) (eval env step)
 
-        -- TODO: add Plus case!!
         Plus l r ->
             case (eval env l, eval env r) of    -- evaluate both sides to get their values
                 (VNat a, VNat b) ->             -- Once we get their values, we apply the 'add' opperation from Nat.elm
@@ -90,7 +89,7 @@ toFloatValue v =
             Debug.todo "Internal error: expected a float value"
 
 
-doApply : Value -> Value -> Value
+doApply : Value -> Value -> Value -- Apply the function to the argument
 doApply rator arg =
     case rator of
         VClosure env x body ->
