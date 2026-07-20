@@ -15,6 +15,9 @@ readBackValue n ty v =
         ( TNat, VNat k ) ->
             Nat k
 
+        ( TInt, VInt z ) ->
+            IntLit z
+
         ( TFlt, VFloat f ) ->
             Flt f
 

@@ -6,6 +6,7 @@ module Checking exposing (..)
 import Dict exposing (Dict)
 import Types exposing (..)
 import Natural as Natural
+import Integer exposing (Integer)
 
 
 type alias Ctx =
@@ -46,6 +47,14 @@ synth ctx expr =
                             Err ("Plus expected Nat on the right, but got " ++ Debug.toString other)
                         Err msg ->
                             Err msg
+                Ok TInt ->
+                    case synth ctx r of
+                        Ok TInt ->
+                            Ok TInt
+                        Ok other ->
+                            Err ("Plus expected Int on the right, but got " ++ Debug.toString other)
+                        Err msg ->
+                            Err msg
                 Ok TFlt ->
                     case synth ctx r of
                         Ok TFlt ->
@@ -55,12 +64,15 @@ synth ctx expr =
                         Err msg ->
                             Err msg
                 Ok other ->
-                    Err ("Plus expected Nat or Flt on the left, but got " ++ Debug.toString other)
+                    Err ("Plus expected Nat, Int or Flt on the left, but got " ++ Debug.toString other)
                 Err msg ->
                     Err msg
 
         Nat _ ->
             Ok TNat
+
+        IntLit _ ->
+            Ok TInt
 
         Flt _ ->
             Ok TFlt

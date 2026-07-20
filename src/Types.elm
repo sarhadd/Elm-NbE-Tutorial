@@ -2,6 +2,7 @@
 module Types exposing (..)
 
 import Natural exposing (Natural)
+import Integer exposing (Integer)
 import Dict exposing (Dict)
 
 
@@ -32,6 +33,7 @@ type alias Message =
 
 type Ty
     = TNat           -- natural type
+    | TInt           -- integer type
     | TFlt           -- float type
     | TVec Expr Ty   -- vector type (Expr has to be Nat)
     | TArr Ty Ty     -- function type (t₁ → t₂)
@@ -51,6 +53,7 @@ type Expr
     | App Expr Expr
     | Plus Expr Expr   -- replaces Rec
     | Nat Natural      -- replaces Zero/Add1
+    | IntLit Integer   -- integer literal
     | Flt Float        -- floating-point literal
     | Ann Expr Ty
     | VecLit (List Expr)  -- vector literal; length is List.length
@@ -63,6 +66,7 @@ type Expr
 
 type Value
     = VNat Natural
+    | VInt Integer
     | VFloat Float
     | VClosure (Env Value) Name Expr
     | VNeutral Ty Neutral

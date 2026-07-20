@@ -3,6 +3,7 @@ module Eval exposing (..)
 import Dict
 import Types exposing (..)
 import Natural as Natural exposing (Natural)
+import Integer as Integer exposing (Integer)
 import Basics exposing (round)
 import Vector
 
@@ -25,6 +26,9 @@ eval env expr =
         Nat n ->
             VNat n
 
+        IntLit z ->
+            VInt z
+
         Flt f ->
             VFloat f
 
@@ -35,10 +39,12 @@ eval env expr =
             case (eval env l, eval env r) of    -- evaluate both sides to get their values
                 (VNat a, VNat b) ->             -- Once we get their values, we apply the 'add' opperation from Nat.elm
                     VNat (Natural.add a b)
+                (VInt a, VInt b) ->
+                    VInt (Integer.add a b)
                 (VFloat a, VFloat b) ->
                     VFloat (a + b)
                 _ ->
-                    Debug.todo  ("Internal error: Plus applied to non-natural")
+                    Debug.todo  ("Internal error: Plus applied to mismatched numeric types")
 
         Ann e t ->
             eval env e
@@ -74,6 +80,8 @@ addValue a b =
     case ( a, b ) of
         ( VNat x, VNat y ) ->
             VNat (Natural.add x y)
+        ( VInt x, VInt y ) ->
+            VInt (Integer.add x y)
         ( VFloat x, VFloat y ) ->
             VFloat (x + y)
         _ ->
@@ -94,6 +102,9 @@ valueToNormal v =
     case v of
         VNat n ->
             Normal { normalType = TNat, normalValue = VNat n }
+
+        VInt z ->
+            Normal { normalType = TInt, normalValue = VInt z }
 
         VFloat f ->
             Normal { normalType = TFlt, normalValue = VFloat f }

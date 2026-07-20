@@ -4,7 +4,8 @@
         "src",
         "tests",
         "benchmarks",
-        "vendor/elm-natural/src"
+        "vendor/elm-natural/src",
+        "vendor/elm-integer/src"
     ],
     "elm-version": "0.19.1",
     "dependencies": {
