@@ -52,6 +52,8 @@ type Expr
     | Lambda Name Expr
     | App Expr Expr
     | Plus Expr Expr   -- replaces Rec
+    | Sub Expr Expr
+    | Mult Expr Expr
     | Nat Natural      -- replaces Zero/Add1
     | IntLit Integer   -- integer literal
     | Flt Float        -- floating-point literal
@@ -79,6 +81,8 @@ type Neutral    -- either a neutral or a neutral applied to a value
     | NApp Neutral Normal
     -- NRec omitted: arithmetic is handled directly via NPlus.
     | NPlus Neutral Normal  -- stuck plus: neutral left operand, normal right
+    | NSub Neutral Normal  -- stuck subtraction
+    | NMult Neutral Normal -- stuck multiplication
     | NVecAdd Neutral Normal  -- mirrors NPlus's convention
     | NDot Neutral Normal
     | NScale Normal Neutral  -- scalar is normal, vector operand is the stuck one

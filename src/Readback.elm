@@ -53,11 +53,17 @@ readBackNeutral n neu =
         NPlus l r ->
             Plus (readBackNeutral n l) (readBackNormal n r)
 
+        NSub l r ->
+            Sub (readBackNeutral n l) (readBackNormal n r)
+
+        NMult l r ->
+            Mult (readBackNeutral n l) (readBackNormal n r)
+
         NVecAdd l r ->
             VecAdd (readBackNeutral n l) (readBackNormal n r)
 
         NDot l r ->
             Dot (readBackNeutral n l) (readBackNormal n r)
-
+            
         NScale l r ->
             Scale (readBackNormal n l) (readBackNeutral n r)

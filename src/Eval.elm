@@ -46,6 +46,28 @@ eval env expr =
                 _ ->
                     Debug.todo  ("Internal error: Plus applied to mismatched numeric types")
 
+        Sub l r ->
+            case (eval env l, eval env r) of
+                (VNat a, VNat b) ->
+                    VNat (Natural.sub a b)
+                (VInt a, VInt b) ->
+                    VInt (Integer.sub a b)
+                (VFloat a, VFloat b) ->
+                    VFloat (a - b)
+                _ ->
+                    Debug.todo  ("Internal error: Sub applied to mismatched numeric types")
+
+        Mult l r ->
+            case (eval env l, eval env r) of
+                (VNat a, VNat b) ->
+                    VNat (Natural.mul a b)
+                (VInt a, VInt b) ->
+                    VInt (Integer.mul a b)
+                (VFloat a, VFloat b) ->
+                    VFloat (a * b)
+                _ ->
+                    Debug.todo  ("Internal error: Mult applied to mismatched numeric types")
+
         Ann e t ->
             eval env e
 

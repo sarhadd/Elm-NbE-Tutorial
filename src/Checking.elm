@@ -68,6 +68,68 @@ synth ctx expr =
                 Err msg ->
                     Err msg
 
+        Sub l r ->
+            case synth ctx l of
+                Ok TNat ->
+                    case synth ctx r of
+                        Ok TNat ->
+                            Ok TNat
+                        Ok other ->
+                            Err ("Sub expected Nat on the right, but got " ++ Debug.toString other)
+                        Err msg ->
+                            Err msg
+                Ok TInt ->
+                    case synth ctx r of
+                        Ok TInt ->
+                            Ok TInt
+                        Ok other ->
+                            Err ("Sub expected Int on the right, but got " ++ Debug.toString other)
+                        Err msg ->
+                            Err msg
+                Ok TFlt ->
+                    case synth ctx r of
+                        Ok TFlt ->
+                            Ok TFlt
+                        Ok other ->
+                            Err ("Sub expected Flt on the right, but got " ++ Debug.toString other)
+                        Err msg ->
+                            Err msg
+                Ok other ->
+                    Err ("Sub expected Nat, Int or Flt on the left, but got " ++ Debug.toString other)
+                Err msg ->
+                    Err msg
+
+        Mult l r ->
+            case synth ctx l of
+                Ok TNat ->
+                    case synth ctx r of
+                        Ok TNat ->
+                            Ok TNat
+                        Ok other ->
+                            Err ("Mult expected Nat on the right, but got " ++ Debug.toString other)
+                        Err msg ->
+                            Err msg
+                Ok TInt ->
+                    case synth ctx r of
+                        Ok TInt ->
+                            Ok TInt
+                        Ok other ->
+                            Err ("Mult expected Int on the right, but got " ++ Debug.toString other)
+                        Err msg ->
+                            Err msg
+                Ok TFlt ->
+                    case synth ctx r of
+                        Ok TFlt ->
+                            Ok TFlt
+                        Ok other ->
+                            Err ("Mult expected Flt on the right, but got " ++ Debug.toString other)
+                        Err msg ->
+                            Err msg
+                Ok other ->
+                    Err ("Mult expected Nat, Int or Flt on the left, but got " ++ Debug.toString other)
+                Err msg ->
+                    Err msg
+
         Nat _ ->
             Ok TNat
 
